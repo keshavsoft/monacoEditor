@@ -21,15 +21,15 @@
         <div class="logo">JS</div>
         <div class="title-area">
           <h1>end-points.js</h1>
-          <p>Local Standalone Editor v2</p>
+          <p>Local Standalone Editor</p>
         </div>
       </div>
       <div class="actions">
-        <button class="btn" onclick="copyCode()">
+        <button class="btn" id="copy-button" type="button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy Code
         </button>
-        <button class="btn btn-primary" onclick="downloadCode()">
+        <button class="btn btn-primary" id="download-button" type="button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download File
         </button>
@@ -58,6 +58,10 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- External Application Logic -->
-  <script src="js/app.js"></script>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js">
+</script>
+
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
