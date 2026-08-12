@@ -2,16 +2,23 @@
   --bg-color: #0b0f19;
   --panel-bg: #111827;
   --card-border: rgba(255, 255, 255, 0.08);
+
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
-  --primary: #8b5cf6; /* Violet */
+
+  --primary: #8b5cf6;
   --primary-glow: rgba(139, 92, 246, 0.15);
-  --secondary: #06b6d4; /* Cyan */
+  --secondary: #06b6d4;
+
   --accent-green: #10b981;
   --accent-red: #ef4444;
-  --font-outfit: 'Outfit', sans-serif;
-  --font-inter: 'Inter', sans-serif;
+
+  --font-outfit: "Outfit", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
+
+
+/* Global Reset */
 
 * {
   box-sizing: border-box;
@@ -19,40 +26,70 @@
   padding: 0;
 }
 
+
+/* Body */
+
 body {
   background-color: var(--bg-color);
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+
+  background-image:
+    radial-gradient(
+      at 0% 0%,
+      rgba(139, 92, 246, 0.1) 0px,
+      transparent 50%
+    ),
+    radial-gradient(
+      at 100% 100%,
+      rgba(6, 182, 212, 0.1) 0px,
+      transparent 50%
+    );
+
   color: var(--text-main);
+
   font-family: var(--font-inter);
+
   height: 100vh;
   width: 100vw;
+
   display: flex;
   flex-direction: column;
+
   overflow: hidden;
 }
 
+
 /* App Layout */
+
 .app-container {
   display: flex;
   flex-direction: column;
+
   height: 100%;
   width: 100%;
 }
 
+
 /* Header */
+
 header {
   background: rgba(17, 24, 39, 0.85);
+
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+
   border-bottom: 1px solid var(--card-border);
+
   padding: 1rem 2rem;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   z-index: 10;
 }
+
+
+/* Brand */
 
 .brand-group {
   display: flex;
@@ -60,198 +97,296 @@ header {
   gap: 0.75rem;
 }
 
+
 .logo {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      var(--secondary) 100%
+    );
+
   width: 36px;
   height: 36px;
+
   border-radius: 8px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-family: var(--font-outfit);
   font-weight: 800;
+
   color: #fff;
+
   font-size: 1.25rem;
-  box-shadow: 0 4px 12px var(--primary-glow);
+
+  box-shadow:
+    0 4px 12px var(--primary-glow);
 }
+
 
 .title-area h1 {
   font-family: var(--font-outfit);
+
   font-size: 1.35rem;
   font-weight: 700;
+
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff 40%, var(--primary) 100%);
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff 40%,
+      var(--primary) 100%
+    );
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+
 .title-area p {
   color: var(--text-muted);
+
   font-size: 0.75rem;
+
   margin-top: 0.1rem;
 }
+
+
+/* Actions */
 
 .actions {
   display: flex;
   gap: 0.75rem;
 }
 
-/* Premium buttons */
+
+/* Premium Buttons */
+
 .btn {
   padding: 0.6rem 1.2rem;
+
   border-radius: 6px;
+
   font-family: var(--font-outfit);
+
   font-size: 0.85rem;
   font-weight: 600;
+
   cursor: pointer;
+
   display: inline-flex;
   align-items: center;
+
   gap: 0.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  transition:
+    all 0.2s cubic-bezier(
+      0.4,
+      0,
+      0.2,
+      1
+    );
+
   border: 1px solid var(--card-border);
+
   background: rgba(255, 255, 255, 0.03);
+
   color: var(--text-main);
 }
 
+
 .btn:hover {
   background: rgba(255, 255, 255, 0.08);
+
   transform: translateY(-1px);
 }
 
+
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      #7c3aed 100%
+    );
+
   border: none;
+
   color: #fff;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+
+  box-shadow:
+    0 4px 12px rgba(
+      139,
+      92,
+      246,
+      0.3
+    );
 }
+
 
 .btn-primary:hover {
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
-  background: linear-gradient(135deg, #9061f9 0%, #8b5cf6 100%);
+  box-shadow:
+    0 6px 16px rgba(
+      139,
+      92,
+      246,
+      0.5
+    );
+
+  background:
+    linear-gradient(
+      135deg,
+      #9061f9 0%,
+      #8b5cf6 100%
+    );
 }
 
+
 /* Workspace */
+
 .workspace {
   flex: 1;
+
   display: flex;
+
   position: relative;
+
   background-color: var(--panel-bg);
 }
+
 
 #editor-container {
   width: 100%;
   height: 100%;
 }
 
-/* Footer / Statusbar */
+
+/* Footer / Status Bar */
+
 .statusbar {
   background: #0b0c10;
+
   border-top: 1px solid var(--card-border);
+
   height: 30px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 0 2rem;
+
   font-size: 0.75rem;
+
   color: var(--text-muted);
 }
+
 
 .statusbar-item {
   display: flex;
   align-items: center;
+
   gap: 1.5rem;
 }
 
-/* Toast Notification system */
+
+/* Toast Notification */
+
 .toast-container {
   position: fixed;
+
   bottom: 2.5rem;
   right: 2.5rem;
+
   display: flex;
   flex-direction: column;
+
   gap: 0.75rem;
+
   z-index: 1000;
 }
 
+
 .toast {
   background: rgba(17, 24, 30, 0.95);
+
   border: 1px solid var(--card-border);
+
   color: #fff;
+
   padding: 0.85rem 1.25rem;
+
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+  box-shadow:
+    0 10px 25px rgba(
+      0,
+      0,
+      0,
+      0.4
+    );
+
   display: flex;
   align-items: center;
+
   gap: 0.6rem;
+
   min-width: 280px;
+
   transform: translateX(120%);
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  transition:
+    transform 0.3s
+    cubic-bezier(
+      0.175,
+      0.885,
+      0.32,
+      1.275
+    );
 }
+
 
 .toast.show {
   transform: translateX(0);
 }
 
+
 .toast-success {
-  border-left: 4px solid var(--accent-green);
+  border-left:
+    4px solid var(--accent-green);
 }
+
 
 .toast-error {
-  border-left: 4px solid var(--accent-red);
-}
-/* Font Size Controls */
-.font-size-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.35rem;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.03);
+  border-left:
+    4px solid var(--accent-red);
 }
 
-.font-size-button {
-  width: 30px;
-  height: 28px;
-  padding: 0;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--text-main);
-  font-family: var(--font-outfit);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-}
 
-.font-size-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.font-size-value {
-  min-width: 38px;
-  text-align: center;
-  color: var(--text-muted);
-  font-family: var(--font-inter);
-  font-size: 0.75rem;
-}
-
-#html-stats {
-  color: var(--text-muted);
-}
 /* Font Size Controls */
 
 .font-size-controls {
   display: inline-flex;
   align-items: center;
+
   gap: 0.35rem;
 
   padding: 0.2rem 0.35rem;
 
   border: 1px solid var(--card-border);
+
   border-radius: 6px;
 
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(
+    255,
+    255,
+    255,
+    0.03
+  );
 }
 
 
@@ -262,6 +397,7 @@ header {
   padding: 0;
 
   border: none;
+
   border-radius: 4px;
 
   background: transparent;
@@ -269,6 +405,7 @@ header {
   color: var(--text-main);
 
   font-family: var(--font-outfit);
+
   font-size: 0.8rem;
   font-weight: 700;
 
@@ -277,7 +414,13 @@ header {
 
 
 .font-size-button:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
 }
 
 
@@ -289,10 +432,26 @@ header {
   color: var(--text-muted);
 
   font-family: var(--font-inter);
+
   font-size: 0.75rem;
 }
 
 
+/* HTML Statistics */
+
 #html-stats {
   color: var(--text-muted);
 }
+
+
+/* --------------------------------------------------
+   Monaco Find / Search Widget
+   --------------------------------------------------
+
+   The application disables the Find/Replace
+   keyboard commands in editor-setup.js.
+
+   This rule also hides the Find widget from
+   the Monaco editor UI.
+*/
+

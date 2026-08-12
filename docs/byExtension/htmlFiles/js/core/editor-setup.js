@@ -6,7 +6,7 @@ function createEditor({
   theme,
   settings
 }) {
-  return monaco.editor.create(container, {
+  const editor = monaco.editor.create(container, {
     value,
     language,
     theme,
@@ -40,6 +40,28 @@ function createEditor({
 
     formatOnPaste: settings.formatOnPaste
   });
+
+  /*
+   * Ctrl + D
+   *
+   * Open Monaco's built-in Find widget.
+   *
+   * "actions.find" is Monaco's built-in
+   * Find action.
+   */
+  editor.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyD,
+    () => {
+      const findAction =
+        editor.getAction("actions.find");
+
+      if (findAction) {
+        findAction.run();
+      }
+    }
+  );
+
+  return editor;
 }
 
 
@@ -48,10 +70,13 @@ function bindLineCounter(
   lineCounterElement
 ) {
   function updateLineCounter() {
-    const model = editor.getModel();
+    const model =
+      editor.getModel();
 
     if (!model) {
-      lineCounterElement.textContent = "Lines: 0";
+      lineCounterElement.textContent =
+        "Lines: 0";
+
       return;
     }
 
@@ -72,17 +97,21 @@ function bindHtmlStats(
   statsElement
 ) {
   function updateHtmlStats() {
-    const model = editor.getModel();
+    const model =
+      editor.getModel();
 
     if (!model) {
       statsElement.textContent =
         "IDs: 0   Classes: 0   Tags: 0";
+
       return;
     }
 
-    const content = model.getValue();
+    const content =
+      model.getValue();
 
-    const parser = new DOMParser();
+    const parser =
+      new DOMParser();
 
     const document =
       parser.parseFromString(
@@ -94,16 +123,21 @@ function bindHtmlStats(
       document.querySelectorAll("*");
 
     const idCount =
-      document.querySelectorAll("[id]").length;
+      document.querySelectorAll(
+        "[id]"
+      ).length;
 
-    const classNames = new Set();
+    const classNames =
+      new Set();
 
     document
       .querySelectorAll("[class]")
       .forEach((element) => {
         element.classList.forEach(
           (className) => {
-            classNames.add(className);
+            classNames.add(
+              className
+            );
           }
         );
       });
