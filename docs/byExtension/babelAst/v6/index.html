@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AST Output Viewer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 32px;
+            background: #111827;
+            color: #ffffff;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        main {
+            width: min(1400px, calc(100% - 40px));
+            margin: 30px auto;
+        }
+
+        .summary {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            min-width: 150px;
+            padding: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .summary-card span {
+            display: block;
+            margin-bottom: 6px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .summary-card strong {
+            font-size: 24px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f9fafb;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .node-type {
+            font-weight: 600;
+        }
+
+        .source-text {
+            max-width: 420px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .empty {
+            color: #9ca3af;
+        }
+
+        .error {
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 700px) {
+            main {
+                width: calc(100% - 24px);
+            }
+
+            .summary {
+                flex-wrap: wrap;
+            }
+
+            header {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>AST Output Viewer</h1>
+        <p>
+            View processed JavaScript AST nodes as structured data.
+        </p>
+    </header>
+
+    <main>
+
+        <div class="summary">
+            <div class="summary-card">
+                <span>Total Nodes</span>
+                <strong id="nodeCount">0</strong>
+            </div>
+
+            <div class="summary-card">
+                <span>Node Types</span>
+                <strong id="typeCount">0</strong>
+            </div>
+        </div>
+
+        <div id="content"></div>
+
+    </main>
+
+    <script>
+        const columns = [
+            "type",
+            "start",
+            "end",
+            "text",
+            "lineType",
+            "raka",
+            "poka",
+            "importedName"
+        ];
+
+        async function loadResults() {
+            const content = document.getElementById("content");
+
+            try {
+                const response = await fetch("./run-output.json");
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Unable to load run-output.json (${response.status})`
+                    );
+                }
+
+                const results = await response.json();
+
+                renderSummary(results);
+                renderTable(results);
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="error">
+                        ${error.message}
+                        <br><br>
+                        Run <strong>node run.js</strong> first.
+                    </div>
+                `;
+            }
+        }
+
+        function renderSummary(results) {
+            const nodeTypes = new Set(
+                results.map((node) => node.type)
+            );
+
+            document.getElementById("nodeCount").textContent =
+                results.length;
+
+            document.getElementById("typeCount").textContent =
+                nodeTypes.size;
+        }
+
+        function renderTable(results) {
+            const content = document.getElementById("content");
+
+            const table = document.createElement("table");
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+
+            columns.forEach((column) => {
+                const th = document.createElement("th");
+
+                th.textContent = column;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+
+            results.forEach((node) => {
+                const row = document.createElement("tr");
+
+                columns.forEach((column) => {
+                    const cell = document.createElement("td");
+
+                    if (node[column] === undefined) {
+                        cell.textContent = "—";
+                        cell.className = "empty";
+                    } else {
+                        cell.textContent = node[column];
+
+                        if (column === "type") {
+                            cell.className = "node-type";
+                        }
+
+                        if (column === "text") {
+                            cell.className = "source-text";
+                        }
+                    }
+
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+
+            const container = document.createElement("div");
+            container.className = "table-container";
+            container.appendChild(table);
+
+            content.appendChild(container);
+        }
+
+        loadResults();
+    </script>
+
+</body>
+</html>

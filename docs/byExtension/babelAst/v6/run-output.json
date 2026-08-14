@@ -1,0 +1,108 @@
+[
+  {
+    "type": "ImportDeclaration",
+    "start": 0,
+    "end": 37,
+    "text": "import { exec } from \"child_process\";",
+    "lineType": "ImportDeclaration",
+    "raka": "child_process",
+    "poka": "exec",
+    "importedName": "exec"
+  },
+  {
+    "type": "ImportDeclaration",
+    "start": 39,
+    "end": 67,
+    "text": "import dotenv from \"dotenv\";",
+    "lineType": "ImportDeclaration",
+    "raka": "dotenv",
+    "poka": "dotenv"
+  },
+  {
+    "type": "ImportDeclaration",
+    "start": 69,
+    "end": 99,
+    "text": "import express from \"express\";",
+    "lineType": "ImportDeclaration",
+    "raka": "express",
+    "poka": "express"
+  },
+  {
+    "type": "ImportDeclaration",
+    "start": 103,
+    "end": 161,
+    "text": "import { router as routerFromapi } from \"./api/routes.js\";",
+    "lineType": "ImportDeclaration",
+    "raka": "./api/routes.js",
+    "poka": "routerFromapi",
+    "importedName": "router"
+  },
+  {
+    "type": "ImportDeclaration",
+    "start": 163,
+    "end": 201,
+    "text": "import setupRoutes from \"./routes.js\";",
+    "lineType": "ImportDeclaration",
+    "raka": "./routes.js",
+    "poka": "setupRoutes"
+  },
+  {
+    "type": "ImportDeclaration",
+    "start": 203,
+    "end": 241,
+    "text": "import startServer from \"./server.js\";",
+    "lineType": "ImportDeclaration",
+    "raka": "./server.js",
+    "poka": "startServer"
+  },
+  {
+    "type": "ExpressionStatement",
+    "start": 245,
+    "end": 277,
+    "text": "dotenv.config({ path: \".env\" });",
+    "lineType": "ExpressionStatement"
+  },
+  {
+    "type": "VariableDeclaration",
+    "start": 281,
+    "end": 303,
+    "text": "const app = express();",
+    "lineType": "VariableDeclaration",
+    "poka": "app"
+  },
+  {
+    "type": "ExpressionStatement",
+    "start": 307,
+    "end": 324,
+    "text": "setupRoutes(app);",
+    "lineType": "ExpressionStatement"
+  },
+  {
+    "type": "VariableDeclaration",
+    "start": 328,
+    "end": 362,
+    "text": "const { port } = startServer(app);",
+    "lineType": "VariableDeclaration"
+  },
+  {
+    "type": "ExpressionStatement",
+    "start": 366,
+    "end": 410,
+    "text": "app.use(\r\n    \"/api\",\r\n    routerFromapi\r\n);",
+    "lineType": "ExpressionStatement"
+  },
+  {
+    "type": "IfStatement",
+    "start": 414,
+    "end": 555,
+    "text": "if (process.env.OPEN_BROWSER === \"true\") {\r\n    // exec(\r\n    //     `start http://localhost:${port}/v28/quotations/index.html`\r\n    // );\r\n}",
+    "lineType": "IfStatement"
+  },
+  {
+    "type": "EmptyStatement",
+    "start": 555,
+    "end": 556,
+    "text": ";",
+    "lineType": "EmptyStatement"
+  }
+]
