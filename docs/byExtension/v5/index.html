@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monaco Editor v5 — File Operations & Export Suite</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070a13;
+      --card-bg: rgba(15, 21, 35, 0.75);
+      --card-hover: rgba(21, 30, 48, 0.9);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.35);
+      --text: #f8fafc;
+      --subtext: #94a3b8;
+      --blue: #38bdf8;
+      --purple: #c084fc;
+      --cyan: #06b6d4;
+      --green: #34d399;
+      --font-main: 'Inter', sans-serif;
+      --font-head: 'Outfit', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7, 10, 19, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .brand-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, #0284c7, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: #fff;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 45px 20px;
+      width: 100%;
+    }
+
+    .hero { text-align: center; margin-bottom: 40px; }
+    .badge {
+      display: inline-block; padding: 4px 12px;
+      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 20px; color: var(--blue); font-size: 12px; font-weight: 700; margin-bottom: 16px;
+    }
+    .hero h1 { font-family: var(--font-head); font-size: 2.8rem; font-weight: 900; margin-bottom: 12px; color: #fff; }
+    .hero p { font-size: 15px; color: var(--subtext); max-width: 620px; margin: 0 auto 24px; }
+
+    .btn {
+      padding: 10px 22px; border-radius: 9px; font-size: 13.5px; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #0284c7, #06b6d4); color: #fff;
+    }
+
+    .feature-list {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 24px; margin-bottom: 30px;
+    }
+    .feature-list h3 { font-family: var(--font-head); font-size: 18px; color: #fff; margin-bottom: 14px; }
+    .feature-item { font-size: 13.5px; color: var(--subtext); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+    footer { text-align: center; padding: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--subtext); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../../index.html" class="brand">
+      <div class="brand-icon">&lt;/&gt;</div>
+      <span>Monaco Platform v5</span>
+    </a>
+    <a href="../../index.html" style="color: var(--blue); text-decoration: none; font-size: 13px; font-weight: 600;">← Back to Main Hub</a>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <span class="badge">VERSION 05 MILESTONE</span>
+      <h1>File Operations & Export</h1>
+      <p>Version 5 introduced native FileReader API integration for opening local files and Blob export utilities for downloading modified code directly in the browser.</p>
+
+      <a href="../../../v5/index.html" class="btn">🚀 Open v5 Editor Prototype</a>
+    </section>
+
+    <div class="feature-list">
+      <h3>✨ Key Milestone Capabilities (v5)</h3>
+      <div class="feature-item"><span>✓</span> <strong>Browser FileReader API</strong>: Load local <code>.js</code> files directly into Monaco model.</div>
+      <div class="feature-item"><span>✓</span> <strong>Blob Export Utility</strong>: Export modified code as downloadable files with custom filenames.</div>
+      <div class="feature-item"><span>✓</span> <strong>Clipboard Manager</strong>: Instant 1-click copy-to-clipboard functionality with status feedback.</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© Monaco Platform · Version 5 Milestone</p>
+  </footer>
+
+</body>
+</html>

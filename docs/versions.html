@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monaco Platform — Developer Project Landing</title>
-  <meta name="description" content="Monaco Platform — Building a browser-native standalone code development platform.">
+  <title>Monaco Platform — Versions Evolution Story (v1 → v8)</title>
+  <meta name="description" content="Complete version evolution story of Monaco Platform from v1 foundation to v8 master suite.">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,21 +91,6 @@
       color: #fff;
     }
 
-    .nav-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .nav-link {
-      color: var(--subtext);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-    .nav-link:hover { color: #fff; }
-
     .nav-btn {
       padding: 8px 18px;
       border-radius: 8px;
@@ -170,30 +155,6 @@
       line-height: 1.7;
     }
 
-    /* Purpose Section (What We Are Doing) */
-    .purpose-box {
-      background: rgba(11, 16, 28, 0.8);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 40px;
-    }
-    .purpose-title {
-      font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--blue);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .purpose-box p {
-      font-size: 14px;
-      color: var(--subtext);
-      margin: 0;
-      line-height: 1.65;
-    }
-
     /* Section Header */
     .section-title {
       font-family: var(--font-head);
@@ -206,7 +167,7 @@
       gap: 8px;
     }
 
-    /* Cards Grid */
+    /* Version Cards Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -304,13 +265,9 @@
     <header>
       <a href="index.html" class="brand">
         <div class="brand-icon">&lt;/&gt;</div>
-        <span>Monaco Platform</span>
+        <span>Monaco Versions Hub</span>
       </a>
-
-      <div class="nav-actions">
-        <a href="versions.html" class="nav-link">📜 Versions</a>
-        <a href="byExtension/v8/index.html" class="nav-btn">🚀 Launch Editor →</a>
-      </div>
+      <a href="index.html" class="nav-btn">← Back to Main Hub</a>
     </header>
 
     <!-- Content -->
@@ -318,99 +275,119 @@
 
       <!-- Hero -->
       <section class="hero">
-        <div class="pill">⚡ BROWSER-NATIVE DEVELOPMENT PLATFORM</div>
-        <h1>Monaco <span>Platform Overview</span></h1>
-        <p>A standalone browser-based code editing platform built around Microsoft's Monaco Engine to empower web developers with instant editing, live diagnostics, and AST analysis.</p>
+        <div class="pill">📜 VERSIONS EVOLUTION STORY</div>
+        <h1>Version Progression <span>(v1 → v8)</span></h1>
+        <p>Explore the incremental technical milestones of Monaco Platform, from early AMD standalone initialization to the Ultimate Master Suite.</p>
       </section>
-
-      <!-- Purpose Section (What We Are Doing) -->
-      <div class="purpose-box">
-        <div class="purpose-title">🎯 What We Are Doing</div>
-        <p>We are building a standalone, zero-dependency browser code editor environment. The platform decouples heavy server dependencies and brings real-time 0ms split previews, Babel AST parsing, and clickable error diagnostics straight into the browser.</p>
-      </div>
 
       <!-- Section Title -->
       <div class="section-title">
-        📁 Platform Modules & Documentation
+        📁 Version Milestones Index
       </div>
 
       <!-- Grid Links -->
       <div class="grid">
 
-        <!-- CARD 1: VERSIONS EVOLUTION (NEW) -->
-        <a href="versions.html" class="card">
+        <!-- VERSION 1 -->
+        <a href="byExtension/v1/index.html" class="card">
           <div>
-            <span class="card-badge">VERSIONS EVOLUTION</span>
-            <h3>Version Progression (v1 → v8)</h3>
-            <p>Explore the full version history timeline from v1 foundation setup to v8 master suite.</p>
+            <span class="card-badge">VERSION 01</span>
+            <h3>Foundation Setup</h3>
+            <p>Single-page Monaco standalone initialization, AMD Require.js loading, custom dark theme, clipboard copy and Blob download.</p>
           </div>
           <div class="card-link">
-            <span>Explore Versions Story</span>
+            <span>Explore Version 1</span>
             <span class="arrow">→</span>
           </div>
         </a>
 
-        <!-- CARD 2: MASTER EDITOR -->
+        <!-- VERSION 2 -->
+        <a href="byExtension/v2/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 02</span>
+            <h3>Settings Persistence</h3>
+            <p>Added persistent editor settings suite (font size, tab width, word wrap) saved into browser localStorage.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 2</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 3 -->
+        <a href="byExtension/v3/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 03</span>
+            <h3>Multi-Theme Engine</h3>
+            <p>Introduced real-time theme switching (VS-Dark, VS-Light, High-Contrast) and enhanced top control toolbar.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 3</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 4 -->
+        <a href="byExtension/v4/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 04</span>
+            <h3>Modular Architecture</h3>
+            <p>Separated application logic, editor core setup, sample endpoints, data models, and features into clean JS modules.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 4</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 5 -->
+        <a href="byExtension/v5/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 05</span>
+            <h3>File Operations & Export</h3>
+            <p>FileReader API integration for reading local desktop files and Blob exporter for downloading modified code.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 5</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 6 -->
+        <a href="byExtension/v6/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 06</span>
+            <h3>Babel AST Diagnostics</h3>
+            <p>Integrated `@babel/standalone` JS parser with real-time red squiggly error markers and mouse hover tooltips.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 6</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 7 -->
+        <a href="byExtension/v7/index.html" class="card">
+          <div>
+            <span class="card-badge">VERSION 07</span>
+            <h3>By-Extension Portal</h3>
+            <p>Extension-oriented development portal with separated JS and HTML editing environments and live statistics.</p>
+          </div>
+          <div class="card-link">
+            <span>Explore Version 7</span>
+            <span class="arrow">→</span>
+          </div>
+        </a>
+
+        <!-- VERSION 8 -->
         <a href="byExtension/v8/index.html" class="card">
           <div>
-            <span class="card-badge">MASTER WORKSPACE</span>
-            <h3>Monaco Master Editor Workspace</h3>
-            <p>Explore the full-featured editor workspace with Live Split Preview, AST Drawer, Error Console & Multi-Tabs.</p>
+            <span class="card-badge">VERSION 08 · ULTIMATE</span>
+            <h3>Master Suite (v8)</h3>
+            <p>0ms Live Split Preview, Babel AST Inspector side drawer, clickable Error Console (jump-to-line), and VS Code multi-tabs (+).</p>
           </div>
           <div class="card-link">
-            <span>Launch Editor</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <!-- CARD 3: BY EXTENSION -->
-        <a href="byExtension/index.html" class="card">
-          <div>
-            <span class="card-badge">EXTENSION SUITE</span>
-            <h3>By Extension Selector</h3>
-            <p>Select specialized coding environments built for `.js` and `.html` file extensions with customized statistics.</p>
-          </div>
-          <div class="card-link">
-            <span>Explore Extension Suite</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <!-- CARD 4: BENCHMARKING -->
-        <a href="online_vs_our_monaco_editor.html" class="card">
-          <div>
-            <span class="card-badge">BENCHMARKING</span>
-            <h3>Online vs Our Monaco</h3>
-            <p>Comparative feature matrix comparing Microsoft Playground, ASTExplorer, CodePen, and StackBlitz against our editor.</p>
-          </div>
-          <div class="card-link">
-            <span>Read Benchmarking</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <!-- CARD 5: DIAGNOSTICS -->
-        <a href="monaco_generic_error_analysis.html" class="card">
-          <div>
-            <span class="card-badge">DIAGNOSTICS SPEC</span>
-            <h3>Generic Diagnostics Spec</h3>
-            <p>Technical analysis explaining Monaco native <code>onDidChangeMarkers</code> error callbacks across JS and HTML.</p>
-          </div>
-          <div class="card-link">
-            <span>Read Specification</span>
-            <span class="arrow">→</span>
-          </div>
-        </a>
-
-        <!-- CARD 6: BABEL AST -->
-        <a href="babel_ast_guide.html" class="card">
-          <div>
-            <span class="card-badge">AST PARSER</span>
-            <h3>Babel AST Guide</h3>
-            <p>Step-by-step technical breakdown of `@babel/standalone` AST parser and red squiggly error rendering.</p>
-          </div>
-          <div class="card-link">
-            <span>Read AST Guide</span>
+            <span>Explore Version 8</span>
             <span class="arrow">→</span>
           </div>
         </a>
@@ -421,7 +398,7 @@
 
     <!-- Footer -->
     <footer>
-      <p>© Monaco Platform · Standalone Browser-Native Architecture</p>
+      <p>© Monaco Platform · Standalone Versions Index</p>
     </footer>
 
   </div>
