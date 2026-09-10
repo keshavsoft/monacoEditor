@@ -1,0 +1,2 @@
+// terminal.js - terminal messages
+function log(message,type="info"){const d=document.createElement("div");d.className="log "+type;d.textContent="> "+message;document.getElementById("terminalOutput").appendChild(d);}

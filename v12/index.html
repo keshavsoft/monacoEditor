@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Monaco JS AST Explorer v9</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js"></script>
+</head>
+
+<body>
+  <div class="toolbar">
+    <b>⚡ Monaco JS AST Explorer v9</b>
+    <button onclick="readJSFile()">⬆ upload JS File</button>
+    <button onclick="createAST()">🌳 Create AST</button>
+    <button id="downloadASTBtn" onclick="downloadAST()" style="display:none">⬇ Download AST</button>
+    <input id="jsInput" type="file" accept=".js,.mjs,.cjs">
+  </div>
+
+  <div class="workspace">
+    <aside class="explorer">
+      <b>EXPLORER</b>
+      <div><button onclick="newFile()">📄+</button> <button onclick="renderExplorer()">↻</button></div>
+      <div id="tree"></div>
+    </aside>
+    <main class="main">
+      <div id="tabs" class="tabs"></div>
+      <div id="editor" class="editor"></div>
+      <div class="terminal"><b>TERMINAL</b>
+        <div id="terminalOutput"></div>
+      </div>
+    </main>
+  </div>
+
+  <section id="astPanel" class="ast-panel">
+    <div class="ast-head">
+      <b>🌳 Babel AST Inspector</b>
+      <span><button onclick="downloadAST()">⬇ Download JSON</button>
+        <button onclick="closeAST()">✕</button></span>
+    </div>
+    <div id="astStatus">Create AST to view JSON.</div>
+    <div id="astEditor" class="ast-editor"></div>
+  </section>
+
+  <script src="js/state.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/monaco-editor.js"></script>
+  <script src="js/file-manager.js"></script>
+  <script src="js/ast-manager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
