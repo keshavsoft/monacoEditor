@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Monaco Studio v11</title>
+
+  <!-- Monaco + Babel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: #0d1117;
+      color: #ddd;
+      font-family: Arial, sans-serif;
+      overflow: hidden
+    }
+
+    button {
+      background: #21262d;
+      color: #ddd;
+      border: 1px solid #3b434d;
+      border-radius: 5px;
+      padding: 7px 11px;
+      cursor: pointer
+    }
+
+    button:hover {
+      background: #30363d
+    }
+
+    #top {
+      height: 58px;
+      background: #11161d;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 17px;
+      color: #58a6ff;
+      margin-right: 10px
+    }
+
+    #fileInput {
+      display: none
+    }
+
+    #body {
+      height: calc(100vh - 58px - 28px);
+      display: flex
+    }
+
+    #explorer {
+      width: 230px;
+      background: #11161d;
+      border-right: 1px solid #30363d;
+      display: flex;
+      flex-direction: column
+    }
+
+    .panelTitle {
+      height: 38px;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase
+    }
+
+    .explorerBtns {
+      padding: 5px 8px;
+      display: flex;
+      gap: 5px
+    }
+
+    .explorerBtns button {
+      padding: 5px 8px
+    }
+
+    #tree {
+      padding: 5px 8px;
+      overflow: auto
+    }
+
+    .file,
+    .folder {
+      padding: 7px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap
+    }
+
+    .file:hover,
+    .folder:hover {
+      background: #21262d
+    }
+
+    .folder {
+      color: #e3b341
+    }
+
+    .file.active {
+      background: #1f6feb33;
+      color: #58a6ff
+    }
+
+    #main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column
+    }
+
+    #tabs {
+      height: 39px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: stretch;
+      overflow: auto
+    }
+
+    .tab {
+      min-width: 125px;
+      max-width: 210px;
+      padding: 10px 8px 8px 12px;
+      border-right: 1px solid #30363d;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .tab.active {
+      background: #0d1117;
+      border-top: 2px solid #58a6ff
+    }
+
+    .close {
+      color: #888
+    }
+
+    .close:hover {
+      color: #fff
+    }
+
+    #editor {
+      flex: 1;
+      min-height: 100px
+    }
+
+    #bottom {
+      height: 28px;
+      background: #1f6feb;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 12px;
+      justify-content: space-between
+    }
+
+    #terminal {
+      height: 180px;
+      background: #080b0f;
+      border-top: 1px solid #30363d;
+      display: flex;
+      flex-direction: column
+    }
+
+    #termHead {
+      height: 34px;
+      padding: 8px 12px;
+      background: #11161d;
+      font-size: 12px
+    }
+
+    #termOut {
+      flex: 1;
+      overflow: auto;
+      padding: 8px 12px;
+      font: 12px Consolas, monospace
+    }
+
+    .ok {
+      color: #3fb950
+    }
+
+    .err {
+      color: #f85149
+    }
+
+    .info {
+      color: #58a6ff
+    }
+
+    #astPanel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: min(560px, 55vw);
+      height: 100vh;
+      background: #0d1117;
+      border-left: 1px solid #444;
+      z-index: 20;
+      display: none;
+      flex-direction: column;
+      box-shadow: -10px 0 30px #0008
+    }
+
+    #astPanel.show {
+      display: flex
+    }
+
+    #astHead {
+      height: 55px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #c084fc;
+      font-weight: bold
+    }
+
+    #astHead button {
+      margin-left: 5px
+    }
+
+    #astStatus {
+      padding: 12px;
+      border-bottom: 1px solid #30363d;
+      font-size: 13px
+    }
+
+    #astOutput {
+      margin: 0;
+      padding: 14px;
+      flex: 1;
+      overflow: auto;
+      font: 12px Consolas, monospace;
+      white-space: pre-wrap
+    }
+
+    #previewPanel {
+      position: fixed;
+      right: 20px;
+      bottom: 45px;
+      width: 55vw;
+      height: 55vh;
+      background: #fff;
+      border: 1px solid #444;
+      z-index: 15;
+      display: none;
+      flex-direction: column
+    }
+
+    #previewPanel.show {
+      display: flex
+    }
+
+    #previewHead {
+      height: 38px;
+      background: #161b22;
+      color: #ddd;
+      padding: 8px;
+      display: flex;
+      justify-content: space-between
+    }
+
+    #preview {
+      border: 0;
+      flex: 1;
+      background: white
+    }
+
+    @media(max-width:800px) {
+      #explorer {
+        width: 180px
+      }
+
+      #astPanel {
+        width: 80vw
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="top">
+    <div class="logo">⚡ Monaco Studio v9</div>
+    <button onclick="newFile()">＋ New File</button>
+    <button onclick="document.getElementById('fileInput').click()">⬆ Upload</button>
+    <button onclick="saveCurrentFile()">💾 Save</button>
+    <button onclick="downloadCurrent()">⬇ Download</button>
+    <button onclick="runCurrent()">▶ Run</button>
+    <button onclick="generateAST()">🌳 AST</button>
+    <button onclick="togglePreview()">👁 Preview</button>
+    <input id="fileInput" type="file" multiple accept=".js,.jsx,.html,.htm,.css,.json,.txt">
+  </div>
+
+  <div id="body">
+    <aside id="explorer">
+      <div class="panelTitle">Explorer</div>
+      <div class="explorerBtns">
+        <button onclick="newFolder()">📁+</button>
+        <button onclick="newFile()">📄+</button>
+        <button onclick="collapseFolders()">−</button>
+      </div>
+      <div id="tree"></div>
+    </aside>
+
+    <main id="main">
+      <div id="tabs"></div>
+      <div id="editor"></div>
+      <div id="terminal">
+        <div id="termHead">TERMINAL</div>
+        <div id="termOut"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="bottom">
+    <span id="statusLeft">Ready</span>
+    <span id="statusRight">JavaScript • Monaco v0.45.0</span>
+  </div>
+
+  <div id="astPanel">
+    <div id="astHead">
+      <span>🌳 Babel AST Inspector</span>
+      <div>
+        <button id="downloadAstBtn" onclick="downloadAST()">⬇ Download JSON</button>
+        <button onclick="closeAST()">✕</button>
+      </div>
+    </div>
+    <div id="astStatus"></div>
+    <pre id="astOutput"></pre>
+  </div>
+
+  <div id="previewPanel">
+    <div id="previewHead"><span>Live Preview</span><button onclick="togglePreview()">✕</button></div>
+    <iframe id="preview" sandbox="allow-scripts"></iframe>
+  </div>
+
+  <script>
+    require.config({
+      paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs" }
+    });
+
+    let editor;
+    let currentFile = "";
+    let currentAST = null;
+    let folders = ["src"];
+    let files = {
+      "index.html": {
+        content: `<!DOCTYPE html>
+<html>
+<head><title>Monaco Studio</title></head>
+<body>
+  <h1>Hello Monaco Studio v9</h1>
+  <p>Edit this file and click Run.</p>
+</body>
+</html>`,
+        language: "html"
+      },
+      "app.js": {
+        content: `function hello(name) {
+  return "Hello " + name;
+}
+
+console.log(hello("Monaco"));`,
+        language: "javascript"
+      },
+      "src/example.js": {
+        content: `const user = {
+  name: "Developer",
+  role: "Full Stack Developer"
+};
+
+console.log(user);`,
+        language: "javascript"
+      }
+    };
+
+    require(["vs/editor/editor.main"], function () {
+      editor = monaco.editor.create(document.getElementById("editor"), {
+        value: "",
+        language: "javascript",
+        theme: "vs-dark",
+        automaticLayout: true,
+        fontSize: 14,
+        minimap: { enabled: true },
+        wordWrap: "off",
+        scrollBeyondLastLine: false,
+        suggestOnTriggerCharacters: true,
+        automaticLayout: true
+      });
+
+      editor.onDidChangeModelContent(() => {
+        if (currentFile && files[currentFile]) files[currentFile].content = editor.getValue();
+        setStatus("Modified");
+      });
+
+      renderTree();
+      openFile("index.html");
+      log("Monaco Studio v9 started.", "ok");
+      log("Ready. Upload, edit, run, inspect AST or download files.", "info");
+    });
+
+    function languageFromName(name) {
+      let ext = name.split(".").pop().toLowerCase();
+      return { js: "javascript", jsx: "javascript", html: "html", htm: "html", css: "css", json: "json", txt: "plaintext" }[ext] || "plaintext";
+    }
+
+    function icon(name) {
+      let e = name.split(".").pop().toLowerCase();
+      return { js: "🟨", jsx: "⚛️", html: "🌐", htm: "🌐", css: "🎨", json: "{}" }[e] || "📄";
+    }
+
+    function renderTree() {
+      const tree = document.getElementById("tree");
+      tree.innerHTML = "";
+      folders.forEach(folder => {
+        const d = document.createElement("div");
+        d.className = "folder";
+        d.textContent = "📂 " + folder;
+        d.onclick = () => log("Folder selected: " + folder, "info");
+        tree.appendChild(d);
+      });
+      Object.keys(files).forEach(name => {
+        const d = document.createElement("div");
+        d.className = "file" + (name === currentFile ? " active" : "");
+        d.textContent = icon(name) + " " + name;
+        d.onclick = () => openFile(name);
+        tree.appendChild(d);
+      });
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = "";
+      const open = Object.keys(files).filter(n => files[n].open);
+      if (!open.includes(currentFile) && currentFile) open.push(currentFile);
+      open.forEach(name => {
+        const t = document.createElement("div");
+        t.className = "tab" + (name === currentFile ? " active" : "");
+        const label = document.createElement("span");
+        label.textContent = icon(name) + " " + name.split("/").pop();
+        const c = document.createElement("span");
+        c.className = "close";
+        c.textContent = "×";
+        c.onclick = e => { e.stopPropagation(); closeFile(name) };
+        t.append(label, c);
+        t.onclick = () => openFile(name);
+        tabs.appendChild(t);
+      });
+    }
+
+    function openFile(name) {
+      if (!files[name]) return;
+      if (currentFile && files[currentFile]) files[currentFile].content = editor.getValue();
+      currentFile = name;
+      files[name].open = true;
+      editor.setValue(files[name].content);
+      monaco.editor.setModelMarkers(editor.getModel(), "babel", []);
+      monaco.editor.setModelMarkers(editor.getModel(), "run", []);
+      monaco.editor.setModelLanguage(editor.getModel(), files[name].language);
+      renderTree(); renderTabs();
+      setStatus(name);
+      log("Opened " + name, "info");
+    }
+
+    function closeFile(name) {
+      if (!files[name]) return;
+      files[name].open = false;
+      let next = Object.keys(files).find(n => files[n].open);
+      if (name === currentFile) {
+        if (next) openFile(next);
+        else { currentFile = ""; editor.setValue(""); renderTabs(); }
+      } else renderTabs();
+      log("Closed " + name, "info");
+    }
+
+    function newFile() {
+      let name = prompt("Enter file name", "newFile.js");
+      if (!name) return;
+      if (files[name]) return alert("File already exists.");
+      files[name] = { content: "", language: languageFromName(name), open: true };
+      openFile(name);
+      log("Created " + name, "ok");
+    }
+
+    function newFolder() {
+      let name = prompt("Enter folder name", "components");
+      if (!name) return;
+      if (!folders.includes(name)) folders.push(name);
+      renderTree();
+      log("Created folder " + name, "ok");
+    }
+
+    function collapseFolders() {
+      document.querySelectorAll(".folder").forEach(x => x.style.display = x.style.display === "none" ? "block" : "none");
+    }
+
+    document.getElementById("fileInput").addEventListener("change", function (e) {
+      [...e.target.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const name = file.name;
+          files[name] = {
+            content: ev.target.result,
+            language: languageFromName(name),
+            open: true
+          };
+          openFile(name);
+          log("Uploaded " + name, "ok");
+        };
+        reader.readAsText(file);
+      });
+      e.target.value = "";
+    });
+
+    function saveCurrentFile() {
+      if (!currentFile) return;
+      files[currentFile].content = editor.getValue();
+      log("Saved " + currentFile + " (browser memory).", "ok");
+      setStatus("Saved");
+    }
+
+    function downloadCurrent() {
+      if (!currentFile) return alert("Open a file first.");
+      saveCurrentFile();
+      downloadText(currentFile, files[currentFile].content);
+      log("Downloaded " + currentFile, "ok");
+    }
+
+    function downloadText(name, text) {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = name.split("/").pop(); a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+    }
+
+    function runCurrent() {
+      if (!currentFile) return;
+      saveCurrentFile();
+      const code = files[currentFile].content;
+      log("Running " + currentFile + "...", "info");
+
+      if (files[currentFile].language === "html") {
+        document.getElementById("preview").srcdoc = code;
+        document.getElementById("previewPanel").classList.add("show");
+        log("HTML rendered in Live Preview.", "ok");
+        return;
+      }
+
+      if (files[currentFile].language === "javascript") {
+        try {
+          const result = Babel.transform(code, { sourceType: "unambiguous" });
+          monaco.editor.setModelMarkers(editor.getModel(), "run", []);
+          log("JavaScript syntax check passed.", "ok");
+          log("Browser execution is shown in the console below when possible.", "info");
+          try {
+            const value = (0, eval)(code);
+            if (value !== undefined) log("Result: " + String(value), "ok");
+          } catch (execError) {
+            log("Runtime Error: " + execError.message, "err");
+          }
+        } catch (error) {
+          showBabelError(error, "run");
+        }
+      } else {
+        log("Run preview is currently supported for HTML and JavaScript.", "info");
+      }
+    }
+
+    function generateAST() {
+      if (!currentFile) return alert("Open a JavaScript file first.");
+      const panel = document.getElementById("astPanel");
+      const status = document.getElementById("astStatus");
+      const output = document.getElementById("astOutput");
+      const btn = document.getElementById("downloadAstBtn");
+      panel.classList.add("show");
+
+      if (files[currentFile].language !== "javascript") {
+        currentAST = null; btn.style.display = "none";
+        status.textContent = "⚠ AST currently supports JavaScript files.";
+        status.className = "info";
+        output.textContent = "Open a .js or .jsx file and click AST again.";
+        return;
+      }
+
+      if (typeof Babel === "undefined") {
+        currentAST = null; btn.style.display = "none";
+        status.textContent = "❌ Babel is not loaded.";
+        status.className = "err";
+        output.textContent = "Check your internet connection and Babel CDN.";
+        return;
+      }
+
+      try {
+        const code = editor.getValue();
+        const result = Babel.transform(code, {
+          ast: true, code: false, sourceType: "unambiguous"
+        });
+        currentAST = cleanAST(result.ast);
+        monaco.editor.setModelMarkers(editor.getModel(), "babel", []);
+        status.textContent = "✅ AST generated successfully";
+        status.className = "ok";
+        output.textContent = JSON.stringify(currentAST, null, 2);
+        btn.style.display = "inline-block";
+        log("AST generated for " + currentFile, "ok");
+      } catch (error) {
+        currentAST = null; btn.style.display = "none";
+        showBabelError(error, "babel");
+      }
+    }
+
+    function cleanAST(ast) {
+      // Keep Babel AST JSON serializable and compact enough for inspection.
+      return ast;
+    }
+
+    function showBabelError(error, owner) {
+      const line = error.loc?.line || 1;
+      const column = error.loc?.column || 0;
+      monaco.editor.setModelMarkers(editor.getModel(), owner, [
+        {
+          startLineNumber: line,
+          startColumn: column + 1,
+          endLineNumber: line,
+          endColumn: column + 2,
+          message: error.message,
+          severity: monaco.MarkerSeverity.Error
+        }
+      ]);
+
+      if (owner === "babel") {
+        document.getElementById("astStatus").textContent = "❌ Unable to generate AST due to syntax error";
+        document.getElementById("astStatus").className = "err";
+        document.getElementById("astOutput").textContent =
+          `AST Error
+
+Message:
+${error.message}
+
+Location:
+Line ${line}, Column ${column + 1}
+
+Fix the syntax error and click AST Inspector again.`;
+        log("AST Error: " + error.message + " (line " + line + ")", "err");
+      } else {
+        log("Syntax Error: " + error.message + " (line " + line + ")", "err");
+      }
+    }
+
+    function downloadAST() {
+      if (!currentAST) return;
+      downloadText(
+        currentFile.replace(/\.[^.]+$/, "") + ".ast.json",
+        JSON.stringify(currentAST, null, 2)
+      );
+      log("Downloaded AST JSON.", "ok");
+    }
+
+    function closeAST() {
+      document.getElementById("astPanel").classList.remove("show");
+    }
+
+    function togglePreview() {
+      document.getElementById("previewPanel").classList.toggle("show");
+      if (currentFile && files[currentFile]?.language === "html")
+        document.getElementById("preview").srcdoc = editor.getValue();
+    }
+
+    function log(text, type = "info") {
+      const out = document.getElementById("termOut");
+      const line = document.createElement("div");
+      line.className = type;
+      line.textContent = "> " + text;
+      out.appendChild(line);
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function setStatus(text) {
+      document.getElementById("statusLeft").textContent = text;
+    }
+  </script>
+</body>
+
+</html>
