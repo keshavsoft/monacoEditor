@@ -1,0 +1,115 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #1e1e1e;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+#toolbar {
+    height: 50px;
+    background: #252526;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+}
+
+button {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 7px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #444;
+}
+
+#main {
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+#explorer {
+    width: 220px;
+    background: #181818;
+    border-right: 1px solid #333;
+}
+
+#explorerTitle {
+    padding: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.tree-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.tree-item:hover {
+    background: #2a2d2e;
+}
+
+.tree-item.active {
+    background: #094771;
+}
+
+#workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#tabs {
+    height: 40px;
+    display: flex;
+    background: #252526;
+    overflow-x: auto;
+}
+
+.tab {
+    min-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #333;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #1e1e1e;
+}
+
+.close {
+    float: right;
+    margin-left: 10px;
+    color: #aaa;
+}
+
+.close:hover {
+    color: white;
+}
+
+#editor {
+    flex: 1;
+}
+
+#terminal {
+    height: 130px;
+    background: #111;
+    border-top: 1px solid #333;
+    padding: 10px;
+    font-family: monospace;
+    overflow: auto;
+}
+
+.success {
+    color: #4ec9b0;
+}
