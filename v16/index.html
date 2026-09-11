@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager Demo</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="toolbar">
+        <button id="uploadJsBtn">📂 upload JS</button>
+        <button id="newFileBtn">➕ New File</button>
+        <button id="downloadBtn">⬇ Download</button>
+        <input type="file" id="jsInput" accept=".js" hidden>
+    </div>
+
+    <div id="main">
+        <aside id="explorer">
+            <div id="explorerTitle">EXPLORER</div>
+            <div id="tree"></div>
+        </aside>
+
+        <section id="workspace">
+            <div id="tabs"></div>
+            <div id="editor"></div>
+
+            <div id="terminal">
+                <div>TERMINAL</div>
+                <div id="terminalOutput"></div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="./js/index.js"></script>
+</body>
+</html>
