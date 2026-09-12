@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Language Details</title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css">
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <h1>Language Information</h1>
+
+        <p>Monaco Editor Language Definition</p>
+
+    </header>
+
+
+    <main class="details-container">
+
+        <a
+            href="monaco-languages.html"
+            class="back-button">
+            ← Back to Languages
+        </a>
+
+
+        <div
+            id="details"
+            class="details-card">
+        </div>
+
+    </main>
+
+
+    <script>
+
+        const data =
+            localStorage.getItem(
+                "selectedLanguage"
+            );
+
+
+        const details =
+            document.getElementById("details");
+
+
+        if (!data) {
+
+            details.innerHTML = `
+                <h2>Language Not Found</h2>
+
+                <p>
+                    Please select a language from
+                    the Monaco Editor language list.
+                </p>
+            `;
+
+        } else {
+
+            const language =
+                JSON.parse(data);
+
+
+            details.innerHTML = `
+
+                <div class="details-number">
+                    Monaco Language
+                </div>
+
+                <h1>
+                    ${language.name}
+                </h1>
+
+                <div class="detail-row">
+
+                    <strong>
+                        Monaco Language ID
+                    </strong>
+
+                    <code>
+                        ${language.id}
+                    </code>
+
+                </div>
+
+
+                <div class="detail-row">
+
+                    <strong>
+                        File Extension
+                    </strong>
+
+                    <code>
+                        ${language.extension}
+                    </code>
+
+                </div>
+
+
+                <h2>
+                    About ${language.name}
+                </h2>
+
+
+                <p class="large-text">
+                    ${language.story}
+                </p>
+
+
+                <a
+                    href="${language.info}"
+                    target="_blank"
+                    class="official-button">
+
+                    Visit Official Documentation
+
+                </a>
+
+            `;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Monaco Editor - Language Definitions</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>Monaco Editor</h1>
+        <p>Supported Language Definitions</p>
+    </header>
+
+    <main class="container">
+
+        <div class="intro">
+            <h2>70+ Language Definitions</h2>
+
+            <p>
+                Monaco Editor provides language definitions for programming,
+                scripting, markup, configuration and data languages.
+            </p>
+        </div>
+
+        <div id="languageList" class="language-grid"></div>
+
+    </main>
+
+    <script>
+
+        const languages = [
+
+            {
+                name: "JavaScript",
+                id: "javascript",
+                extension: ".js",
+                story: "JavaScript is a popular programming language used to build interactive web applications. It is also widely used with Node.js for backend development.",
+                info: "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+            },
+
+            {
+                name: "TypeScript",
+                id: "typescript",
+                extension: ".ts",
+                story: "TypeScript adds static typing and modern development features to JavaScript. It helps developers build large and maintainable applications.",
+                info: "https://www.typescriptlang.org/docs/"
+            },
+
+            {
+                name: "HTML",
+                id: "html",
+                extension: ".html",
+                story: "HTML defines the structure and content of web pages. It provides elements such as headings, paragraphs, forms and links.",
+                info: "https://developer.mozilla.org/en-US/docs/Web/HTML"
+            },
+
+            {
+                name: "CSS",
+                id: "css",
+                extension: ".css",
+                story: "CSS controls the visual appearance of web pages. It handles layouts, colors, fonts, spacing and responsive designs.",
+                info: "https://developer.mozilla.org/en-US/docs/Web/CSS"
+            },
+
+            {
+                name: "SCSS",
+                id: "scss",
+                extension: ".scss",
+                story: "SCSS is a CSS preprocessor that provides variables, nesting and reusable styles. It makes large stylesheets easier to maintain.",
+                info: "https://sass-lang.com/documentation/"
+            },
+
+            {
+                name: "Less",
+                id: "less",
+                extension: ".less",
+                story: "Less is a CSS preprocessor with variables, functions and nesting. It helps developers organize and reuse CSS code.",
+                info: "https://lesscss.org/"
+            },
+
+            {
+                name: "JSON",
+                id: "json",
+                extension: ".json",
+                story: "JSON is a lightweight data-interchange format. It is commonly used for APIs, configuration files and transferring structured data.",
+                info: "https://www.json.org/"
+            },
+
+            {
+                name: "Markdown",
+                id: "markdown",
+                extension: ".md",
+                story: "Markdown is a lightweight markup language for formatting text. It is commonly used for README files and technical documentation.",
+                info: "https://www.markdownguide.org/"
+            },
+
+            {
+                name: "Python",
+                id: "python",
+                extension: ".py",
+                story: "Python is a high-level programming language known for its simplicity and readability. It is widely used in web development, automation and AI.",
+                info: "https://www.python.org/doc/"
+            },
+
+            {
+                name: "Java",
+                id: "java",
+                extension: ".java",
+                story: "Java is a widely used object-oriented programming language. It is commonly used for enterprise applications, Android development and backend systems.",
+                info: "https://docs.oracle.com/en/java/"
+            },
+
+            {
+                name: "C",
+                id: "cpp",
+                extension: ".c",
+                story: "C is a foundational programming language used for system and low-level programming. Many operating systems and embedded systems use C.",
+                info: "https://en.cppreference.com/w/c"
+            },
+
+            {
+                name: "C++",
+                id: "cpp",
+                extension: ".cpp",
+                story: "C++ extends C with object-oriented and modern programming features. It is widely used for high-performance applications and game development.",
+                info: "https://isocpp.org/"
+            },
+
+            {
+                name: "C#",
+                id: "csharp",
+                extension: ".cs",
+                story: "C# is a modern programming language developed by Microsoft. It is commonly used with .NET for web, desktop and enterprise applications.",
+                info: "https://learn.microsoft.com/en-us/dotnet/csharp/"
+            },
+
+            {
+                name: "Go",
+                id: "go",
+                extension: ".go",
+                story: "Go is a compiled language designed for simplicity and performance. It is popular for cloud services, APIs and distributed systems.",
+                info: "https://go.dev/doc/"
+            },
+
+            {
+                name: "Rust",
+                id: "rust",
+                extension: ".rs",
+                story: "Rust focuses on performance and memory safety without requiring garbage collection. It is used for systems and high-performance software.",
+                info: "https://www.rust-lang.org/learn"
+            },
+
+            {
+                name: "PHP",
+                id: "php",
+                extension: ".php",
+                story: "PHP is a server-side scripting language commonly used for web development. It powers many dynamic websites and web applications.",
+                info: "https://www.php.net/docs.php"
+            },
+
+            {
+                name: "Ruby",
+                id: "ruby",
+                extension: ".rb",
+                story: "Ruby is an object-oriented language designed for developer productivity. Ruby on Rails made it especially popular for web applications.",
+                info: "https://www.ruby-lang.org/en/documentation/"
+            },
+
+            {
+                name: "Kotlin",
+                id: "kotlin",
+                extension: ".kt",
+                story: "Kotlin is a modern language designed to be concise and safe. It is widely used for Android and JVM application development.",
+                info: "https://kotlinlang.org/docs/home.html"
+            },
+
+            {
+                name: "Swift",
+                id: "swift",
+                extension: ".swift",
+                story: "Swift is Apple's modern programming language for application development. It is primarily used for iOS, macOS and other Apple platforms.",
+                info: "https://www.swift.org/documentation/"
+            },
+
+            {
+                name: "Dart",
+                id: "dart",
+                extension: ".dart",
+                story: "Dart is a programming language developed by Google. It is mainly used with Flutter to create cross-platform applications.",
+                info: "https://dart.dev/guides"
+            },
+
+            {
+                name: "SQL",
+                id: "sql",
+                extension: ".sql",
+                story: "SQL is used to communicate with relational databases. It allows developers to query, insert, update and manage structured data.",
+                info: "https://www.w3schools.com/sql/"
+            },
+
+            {
+                name: "GraphQL",
+                id: "graphql",
+                extension: ".graphql",
+                story: "GraphQL is a query language for APIs. It allows clients to request exactly the data they need from a server.",
+                info: "https://graphql.org/learn/"
+            },
+
+            {
+                name: "XML",
+                id: "xml",
+                extension: ".xml",
+                story: "XML is a markup language used to represent structured information. It is commonly used for configuration and data exchange.",
+                info: "https://www.w3.org/XML/"
+            },
+
+            {
+                name: "YAML",
+                id: "yaml",
+                extension: ".yaml",
+                story: "YAML is a human-readable data serialization format. It is frequently used for configuration and DevOps files.",
+                info: "https://yaml.org/"
+            },
+
+            {
+                name: "Shell",
+                id: "shell",
+                extension: ".sh",
+                story: "Shell scripting is used to automate operating-system tasks. Shell scripts are widely used in Linux administration and DevOps.",
+                info: "https://www.gnu.org/software/bash/manual/"
+            },
+
+            {
+                name: "PowerShell",
+                id: "powershell",
+                extension: ".ps1",
+                story: "PowerShell is a command-line shell and scripting language from Microsoft. It is used for system administration and automation.",
+                info: "https://learn.microsoft.com/en-us/powershell/"
+            },
+
+            {
+                name: "Dockerfile",
+                id: "dockerfile",
+                extension: "Dockerfile",
+                story: "A Dockerfile contains instructions for creating a Docker image. It defines the environment and commands required to run an application.",
+                info: "https://docs.docker.com/reference/dockerfile/"
+            },
+
+            {
+                name: "R",
+                id: "r",
+                extension: ".r",
+                story: "R is a programming language designed for statistics and data analysis. It is widely used in research, visualization and data science.",
+                info: "https://www.r-project.org/other-docs.html"
+            },
+
+            {
+                name: "Scala",
+                id: "scala",
+                extension: ".scala",
+                story: "Scala combines object-oriented and functional programming. It runs on the JVM and is commonly used for large data systems.",
+                info: "https://docs.scala-lang.org/"
+            },
+
+            {
+                name: "Perl",
+                id: "perl",
+                extension: ".pl",
+                story: "Perl is a general-purpose scripting language known for powerful text processing. It has been widely used for automation and system administration.",
+                info: "https://perldoc.perl.org/"
+            },
+
+            {
+                name: "Lua",
+                id: "lua",
+                extension: ".lua",
+                story: "Lua is a lightweight scripting language designed for embedding. It is commonly used in games, applications and embedded systems.",
+                info: "https://www.lua.org/docs.html"
+            },
+
+            {
+                name: "CoffeeScript",
+                id: "coffeescript",
+                extension: ".coffee",
+                story: "CoffeeScript is a language that compiles into JavaScript. It provides concise syntax for writing JavaScript applications.",
+                info: "https://coffeescript.org/"
+            },
+
+            {
+                name: "Clojure",
+                id: "clojure",
+                extension: ".clj",
+                story: "Clojure is a functional programming language that runs on the JVM. It emphasizes immutable data and functional programming.",
+                info: "https://clojure.org/guides/getting_started"
+            },
+
+            {
+                name: "F#",
+                id: "fsharp",
+                extension: ".fs",
+                story: "F# is a functional-first language on the .NET platform. It is useful for data processing, applications and scientific computing.",
+                info: "https://learn.microsoft.com/en-us/dotnet/fsharp/"
+            },
+
+            {
+                name: "Haskell",
+                id: "haskell",
+                extension: ".hs",
+                story: "Haskell is a statically typed functional programming language. It emphasizes pure functions and strong type safety.",
+                info: "https://www.haskell.org/documentation/"
+            },
+
+            {
+                name: "Julia",
+                id: "julia",
+                extension: ".jl",
+                story: "Julia is designed for high-performance numerical and scientific computing. It combines productivity with execution speed.",
+                info: "https://docs.julialang.org/"
+            },
+
+            {
+                name: "Objective-C",
+                id: "objective-c",
+                extension: ".m",
+                story: "Objective-C is an object-oriented language historically used for Apple software. It remains important in older Apple codebases.",
+                info: "https://developer.apple.com/documentation/"
+            },
+
+            {
+                name: "Visual Basic",
+                id: "vb",
+                extension: ".vb",
+                story: "Visual Basic is a programming language in the .NET ecosystem. It is used for Windows applications and enterprise software.",
+                info: "https://learn.microsoft.com/en-us/dotnet/visual-basic/"
+            },
+
+            {
+                name: "Solidity",
+                id: "solidity",
+                extension: ".sol",
+                story: "Solidity is a programming language for Ethereum smart contracts. It is used to create decentralized applications on blockchain networks.",
+                info: "https://docs.soliditylang.org/"
+            },
+
+            {
+                name: "Handlebars",
+                id: "handlebars",
+                extension: ".hbs",
+                story: "Handlebars is a templating language based on HTML. It allows dynamic data to be inserted into HTML templates.",
+                info: "https://handlebarsjs.com/guide/"
+            },
+
+            {
+                name: "Razor",
+                id: "razor",
+                extension: ".cshtml",
+                story: "Razor is a markup syntax used with ASP.NET applications. It allows C# code and HTML to work together in web pages.",
+                info: "https://learn.microsoft.com/en-us/aspnet/core/mvc/views/razor"
+            },
+
+            {
+                name: "Pug",
+                id: "pug",
+                extension: ".pug",
+                story: "Pug is a concise template language for generating HTML. It uses indentation to make templates shorter and easier to read.",
+                info: "https://pugjs.org/api/getting-started.html"
+            },
+
+            {
+                name: "Vue",
+                id: "vue",
+                extension: ".vue",
+                story: "Vue is a progressive framework for building user interfaces. Vue single-file components combine template, script and style.",
+                info: "https://vuejs.org/guide/"
+            },
+
+            {
+                name: "Less",
+                id: "less",
+                extension: ".less",
+                story: "Less extends CSS with variables and reusable features. It helps developers create maintainable stylesheets.",
+                info: "https://lesscss.org/"
+            },
+
+            {
+                name: "Razor",
+                id: "razor",
+                extension: ".razor",
+                story: "Razor components combine markup with C# code. They are commonly used for interactive ASP.NET applications.",
+                info: "https://learn.microsoft.com/en-us/aspnet/core/blazor/"
+            },
+
+            {
+                name: "ABAP",
+                id: "abap",
+                extension: ".abap",
+                story: "ABAP is SAP's programming language for enterprise applications. It is primarily used to develop and customize SAP systems.",
+                info: "https://help.sap.com/"
+            },
+
+            {
+                name: "Apex",
+                id: "apex",
+                extension: ".cls",
+                story: "Apex is a strongly typed language used on the Salesforce platform. It allows developers to implement custom business logic.",
+                info: "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/"
+            },
+
+            {
+                name: "Batch",
+                id: "bat",
+                extension: ".bat",
+                story: "Batch scripting automates commands on Windows systems. It is useful for system tasks and simple automation.",
+                info: "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands"
+            },
+
+            {
+                name: "Bicep",
+                id: "bicep",
+                extension: ".bicep",
+                story: "Bicep is a declarative language for deploying Azure resources. It provides simpler syntax for infrastructure as code.",
+                info: "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/"
+            },
+
+            {
+                name: "Cameligo",
+                id: "cameligo",
+                extension: ".mligo",
+                story: "CameLIGO is a language for developing smart contracts. It is part of the LIGO family of blockchain languages.",
+                info: "https://ligolang.org/"
+            },
+
+            {
+                name: "CSP",
+                id: "csp",
+                extension: ".csp",
+                story: "CSP notation is used to describe communicating concurrent systems. It is useful for modeling and reasoning about processes.",
+                info: "https://www.cs.ox.ac.uk/projects/concurrency-tools/"
+            },
+
+            {
+                name: "Cypher",
+                id: "cypher",
+                extension: ".cypher",
+                story: "Cypher is a query language designed for graph databases. It allows developers to describe relationships and graph patterns.",
+                info: "https://neo4j.com/docs/cypher-manual/"
+            },
+
+            {
+                name: "Flow",
+                id: "flow",
+                extension: ".js",
+                story: "Flow is a static type checker for JavaScript. It helps developers detect type-related problems during development.",
+                info: "https://flow.org/en/docs/"
+            },
+
+            {
+                name: "Freemarker",
+                id: "freemarker2",
+                extension: ".ftl",
+                story: "FreeMarker is a template engine used to generate text and HTML. It is commonly used in Java applications.",
+                info: "https://freemarker.apache.org/docs/"
+            },
+
+            {
+                name: "HCL",
+                id: "hcl",
+                extension: ".hcl",
+                story: "HCL is a configuration language developed by HashiCorp. It is widely used with infrastructure tools such as Terraform.",
+                info: "https://developer.hashicorp.com/terraform/language"
+            },
+
+            {
+                name: "Ini",
+                id: "ini",
+                extension: ".ini",
+                story: "INI is a simple configuration-file format. It stores settings using sections and key-value pairs.",
+                info: "https://en.wikipedia.org/wiki/INI_file"
+            },
+
+            {
+                name: "MIPS",
+                id: "mips",
+                extension: ".asm",
+                story: "MIPS assembly is used to write low-level instructions for MIPS processors. It is commonly used for education and computer architecture.",
+                info: "https://www.mips.com/"
+            },
+
+            {
+                name: "MSDAX",
+                id: "msdax",
+                extension: ".dax",
+                story: "DAX is a formula language used with Microsoft data models. It is primarily associated with Power BI and Analysis Services.",
+                info: "https://learn.microsoft.com/en-us/dax/"
+            },
+
+            {
+                name: "MySQL",
+                id: "mysql",
+                extension: ".sql",
+                story: "MySQL is a relational database system using SQL. It is widely used for web applications and backend systems.",
+                info: "https://dev.mysql.com/doc/"
+            },
+
+            {
+                name: "Objective-C++",
+                id: "objective-cpp",
+                extension: ".mm",
+                story: "Objective-C++ combines Objective-C and C++ features. It is useful for Apple applications that need both language ecosystems.",
+                info: "https://developer.apple.com/documentation/"
+            },
+
+            {
+                name: "PostgreSQL",
+                id: "pgsql",
+                extension: ".sql",
+                story: "PostgreSQL is an advanced open-source relational database system. It supports complex queries, transactions and extensibility.",
+                info: "https://www.postgresql.org/docs/"
+            },
+
+            {
+                name: "Protocol Buffers",
+                id: "proto",
+                extension: ".proto",
+                story: "Protocol Buffers provide a compact way to define structured data. They are commonly used for efficient communication between services.",
+                info: "https://protobuf.dev/overview/"
+            },
+
+            {
+                name: "Q#",
+                id: "qsharp",
+                extension: ".qs",
+                story: "Q# is a programming language for quantum computing. It is designed to express quantum algorithms and operations.",
+                info: "https://learn.microsoft.com/en-us/azure/quantum/qsharp-overview"
+            },
+
+            {
+                name: "ReScript",
+                id: "rescript",
+                extension: ".res",
+                story: "ReScript is a strongly typed language that compiles to JavaScript. It provides a type-safe approach to web development.",
+                info: "https://rescript-lang.org/docs/manual/latest/introduction"
+            },
+
+            {
+                name: "Scheme",
+                id: "scheme",
+                extension: ".scm",
+                story: "Scheme is a minimalist dialect of Lisp. It is widely used in computer science education and language research.",
+                info: "https://www.scheme.org/"
+            },
+
+            {
+                name: "Small Basic",
+                id: "small basic",
+                extension: ".smallbasic",
+                story: "Small Basic is a beginner-friendly programming language. It was designed to make programming easier for new developers.",
+                info: "https://smallbasic-publicwebsite.azurewebsites.net/"
+            },
+
+            {
+                name: "SPARQL",
+                id: "sparql",
+                extension: ".rq",
+                story: "SPARQL is a query language for RDF data. It is used to retrieve and manipulate information in semantic web systems.",
+                info: "https://www.w3.org/TR/sparql11-query/"
+            },
+
+            {
+                name: "ST",
+                id: "st",
+                extension: ".st",
+                story: "Structured Text is a programming language used in industrial automation. It is defined as part of the IEC 61131-3 standard.",
+                info: "https://www.plcopen.org/"
+            },
+
+            {
+                name: "Tcl",
+                id: "tcl",
+                extension: ".tcl",
+                story: "Tcl is a scripting language designed for automation and application integration. It is also used in testing and embedded systems.",
+                info: "https://www.tcl-lang.org/"
+            },
+
+            {
+                name: "Twig",
+                id: "twig",
+                extension: ".twig",
+                story: "Twig is a template engine commonly used with PHP applications. It provides a clean syntax for generating dynamic HTML.",
+                info: "https://twig.symfony.com/doc/"
+            },
+
+            {
+                name: "VBScript",
+                id: "vbscript",
+                extension: ".vbs",
+                story: "VBScript is a scripting language based on Visual Basic. It was historically used for Windows automation and web scripting.",
+                info: "https://learn.microsoft.com/en-us/previous-versions/"
+            },
+
+            {
+                name: "WASM",
+                id: "wasm",
+                extension: ".wat",
+                story: "WebAssembly provides a portable compilation target for running code efficiently in browsers. WAT is its human-readable text representation.",
+                info: "https://webassembly.org/docs/"
+            },
+
+            {
+                name: "XML",
+                id: "xml",
+                extension: ".xml",
+                story: "XML represents structured information using tags. It is commonly used in configuration files and data exchange.",
+                info: "https://www.w3.org/XML/"
+            },
+
+            {
+                name: "Liquid",
+                id: "liquid",
+                extension: ".liquid",
+                story: "Liquid is a template language created by Shopify. It is used to generate dynamic content in Shopify themes.",
+                info: "https://shopify.dev/docs/api/liquid"
+            }
+
+        ];
+
+
+        const languageList =
+            document.getElementById("languageList");
+
+
+        languages.forEach((language, index) => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "language-card";
+
+            card.innerHTML = `
+                <div class="number">
+                    ${String(index + 1).padStart(2, "0")}
+                </div>
+
+                <h3>${language.name}</h3>
+
+                <div class="extension">
+                    ${language.extension}
+                </div>
+
+                <p>${language.story}</p>
+
+                <button
+                    onclick="openDetails(${index})">
+                    More Information
+                </button>
+            `;
+
+            languageList.appendChild(card);
+
+        });
+
+
+        function openDetails(index) {
+
+            localStorage.setItem(
+                "selectedLanguage",
+                JSON.stringify(languages[index])
+            );
+
+            window.location.href =
+                "language-details.html";
+
+        }
+
+    </script>
+
+</body>
+</html>
