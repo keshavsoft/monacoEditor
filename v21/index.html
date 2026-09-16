@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read app.js / Markdown</title>
+
+    <style>
+        #editor {
+            width: 100%;
+            height: 500px;
+        }
+
+        button {
+            margin: 10px 5px 10px 0;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <input
+        type="file"
+        id="file"
+        accept=".js"
+    >
+
+   <button
+    onclick="window.open('Monaco_Editor_Basic_Usage.md', '_blank')">
+    Read Monaco Documentation
+</button>
+
+    <div id="editor"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+
+    <script src="index.js"></script>
+
+</body>
+</html>
