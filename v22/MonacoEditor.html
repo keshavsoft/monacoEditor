@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Monaco-Like Code Editor</title>
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+            line-height: 1.65;
+        }
+        .header {
+            background: #172033;
+            color: white;
+            padding: 42px 7%;
+        }
+        .header h1 { margin: 0 0 8px; font-size: 34px; }
+        .header p { margin: 0; color: #cbd5e1; }
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            width: 270px;
+            min-height: calc(100vh - 130px);
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+        }
+        .sidebar h3 { margin-top: 0; }
+        .sidebar a {
+            display: block;
+            padding: 7px 10px;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .sidebar a:hover {
+            background: #eef2ff;
+            color: #2563eb;
+        }
+        main {
+            flex: 1;
+            padding: 40px 6%;
+            min-width: 0;
+        }
+        section {
+            background: white;
+            padding: 28px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #172033;
+            margin-top: 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h3 { color: #334155; }
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 7px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        code {
+            font-family: Consolas, Monaco, monospace;
+            background: #f1f5f9;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .flow {
+            background: #eef2ff;
+            border-left: 4px solid #4f46e5;
+            padding: 18px;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #dbe2ea;
+            padding: 10px;
+            text-align: left;
+        }
+        th { background: #f1f5f9; }
+        .note {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin: 3px;
+        }
+        .footer {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+        @media (max-width: 800px) {
+            .layout { display: block; }
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                position: relative;
+                border-right: 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            main { padding: 20px; }
+            section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>Building a Monaco-Like Code Editor</h1>
+    <p>Understanding how an editor identifies, tokenizes, parses and provides language features.</p>
+</header>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h3>Contents</h3>
+        <a href="#objective">1. Objective</a>
+        <a href="#architecture">2. Architecture</a>
+        <a href="#detection">3. Language Detection</a>
+        <a href="#model">4. Language ID & Model</a>
+        <a href="#definition">5. Language Definition</a>
+        <a href="#tokenization">6. Tokenization</a>
+        <a href="#monarch">7. Monarch</a>
+        <a href="#configuration">8. Language Configuration</a>
+        <a href="#highlighting">9. Syntax Highlighting</a>
+        <a href="#levels">10. Levels of Understanding</a>
+        <a href="#services">11. Language Services</a>
+        <a href="#javascript">12. JavaScript</a>
+        <a href="#workers">13. Web Workers</a>
+        <a href="#architecture-own">14. Own Editor Architecture</a>
+        <a href="#roadmap">15. Learning Roadmap</a>
+        <a href="#conclusion">16. Conclusion</a>
+    </aside>
+
+    <main>
+
+        <section id="objective">
+            <h2>1. Objective</h2>
+            <p>
+                The objective is to understand how Monaco Editor recognizes and processes
+                different programming languages and to use the same concepts to build a
+                simple Monaco-like code editor.
+            </p>
+            <div class="success">
+                <strong>Main Question:</strong>
+                How does a code editor understand JavaScript, Python, HTML, CSS and other languages?
+            </div>
+            <p>
+                A code editor does not necessarily execute the code. It analyzes source text
+                using language-specific rules and services.
+            </p>
+        </section>
+
+        <section id="architecture">
+            <h2>2. High-Level Architecture</h2>
+            <div class="flow">Code Editor
+    ↓
+File / Language Detection
+    ↓
+Language ID
+    ↓
+Language Definition
+    ↓
+Tokenizer
+    ↓
+Syntax Highlighting
+    ↓
+Parser / AST
+    ↓
+Semantic Analysis
+    ↓
+Language Services
+    ├── Autocomplete
+    ├── Diagnostics
+    ├── Hover
+    ├── Definition
+    └── References</div>
+            <p>These are separate responsibilities that work together to create an intelligent code editor.</p>
+        </section>
+
+        <section id="detection">
+            <h2>3. Language Detection</h2>
+            <p>
+                First, the editor needs to determine which language the uploaded file contains.
+                A simple application can use the file extension.
+            </p>
+
+            <table>
+                <tr><th>File</th><th>Extension</th><th>Language ID</th></tr>
+                <tr><td>app.js</td><td>.js</td><td>javascript</td></tr>
+                <tr><td>main.ts</td><td>.ts</td><td>typescript</td></tr>
+                <tr><td>index.html</td><td>.html</td><td>html</td></tr>
+                <tr><td>style.css</td><td>.css</td><td>css</td></tr>
+                <tr><td>main.py</td><td>.py</td><td>python</td></tr>
+                <tr><td>README.md</td><td>.md</td><td>markdown</td></tr>
+            </table>
+
+<pre><code>function getLanguage(fileName) {
+
+    const extension = fileName
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+    switch (extension) {
+
+        case "js":
+            return "javascript";
+
+        case "ts":
+            return "typescript";
+
+        case "html":
+            return "html";
+
+        case "css":
+            return "css";
+
+        case "py":
+            return "python";
+
+        case "json":
+            return "json";
+
+        case "md":
+            return "markdown";
+
+        default:
+            return "plaintext";
+    }
+}</code></pre>
+
+            <div class="note">
+                <strong>Important:</strong> This function only identifies the language.
+                It does not teach Monaco how the language works.
+            </div>
+        </section>
+
+        <section id="model">
+            <h2>4. Assign the Language to the Editor Model</h2>
+            <p>
+                After identifying the file type, the language is associated with the editor model.
+            </p>
+
+<pre><code>monaco.editor.setModelLanguage(
+    editor.getModel(),
+    "javascript"
+);</code></pre>
+
+            <p>
+                The language ID tells the editor which language support should be associated
+                with the current source text.
+            </p>
+
+            <div class="flow">app.js
+    ↓
+.js
+    ↓
+javascript
+    ↓
+Editor Model
+    ↓
+JavaScript Language Support</div>
+        </section>
+
+        <section id="definition">
+            <h2>5. Language Definition</h2>
+            <p>
+                A language definition describes how the editor should recognize pieces of source code.
+            </p>
+
+            <p>For example:</p>
+
+<pre><code>const name = "Srinivas";
+
+function hello() {
+    console.log(name);
+}</code></pre>
+
+            <p>The editor can conceptually identify:</p>
+
+            <div>
+                <span class="tag">const → keyword</span>
+                <span class="tag">name → identifier</span>
+                <span class="tag">"Srinivas" → string</span>
+                <span class="tag">function → keyword</span>
+                <span class="tag">hello → identifier</span>
+                <span class="tag">console → identifier</span>
+            </div>
+        </section>
+
+        <section id="tokenization">
+            <h2>6. Tokenization</h2>
+            <p>
+                Tokenization means breaking source code into meaningful tokens.
+            </p>
+
+<pre><code>const age = 25;</code></pre>
+
+            <p>Conceptually:</p>
+
+            <table>
+                <tr><th>Text</th><th>Token Type</th></tr>
+                <tr><td>const</td><td>keyword</td></tr>
+                <tr><td>age</td><td>identifier</td></tr>
+                <tr><td>=</td><td>operator</td></tr>
+                <tr><td>25</td><td>number</td></tr>
+                <tr><td>;</td><td>delimiter</td></tr>
+            </table>
+
+            <div class="flow">Source Code
+    ↓
+Tokenizer
+    ↓
+Tokens
+    ↓
+Syntax Highlighting</div>
+        </section>
+
+        <section id="monarch">
+            <h2>7. Monarch Tokenizer</h2>
+            <p>
+                Monaco provides a tokenizer system called Monarch for defining syntax highlighting rules.
+                Monarch language definitions can contain tokenizer states and rules.
+            </p>
+
+            <p>A simplified example:</p>
+
+<pre><code>const javascriptLanguage = {
+
+    keywords: [
+        "const",
+        "let",
+        "var",
+        "function",
+        "return",
+        "if",
+        "else"
+    ],
+
+    tokenizer: {
+
+        root: [
+
+            [
+                /[a-zA-Z_$][\w$]*/,
+                {
+                    cases: {
+                        "@keywords": "keyword",
+                        "@default": "identifier"
+                    }
+                }
+            ],
+
+            [
+                /[0-9]+/,
+                "number"
+            ],
+
+            [
+                /".*?"/,
+                "string"
+            ],
+
+            [
+                /\/\/.*$/,
+                "comment"
+            ],
+
+            [
+                /[=+\-*\/]/,
+                "operator"
+            ]
+        ]
+    }
+};</code></pre>
+
+            <p>This is a simplified learning example, not a complete JavaScript grammar.</p>
+
+            <p>Monaco can register a Monarch tokenizer with:</p>
+
+<pre><code>monaco.languages.setMonarchTokensProvider(
+    "myjavascript",
+    javascriptLanguage
+);</code></pre>
+        </section>
+
+        <section id="configuration">
+            <h2>8. Language Configuration</h2>
+            <p>
+                Tokenization is not enough. The editor also needs to know comments, brackets,
+                auto-closing pairs, indentation and other editor behavior.
+            </p>
+
+<pre><code>monaco.languages.setLanguageConfiguration(
+    "myjavascript",
+    {
+        comments: {
+            lineComment: "//",
+            blockComment: ["/*", "*/"]
+        },
+
+        brackets: [
+            ["{", "}"],
+            ["[", "]"],
+            ["(", ")"]
+        ],
+
+        autoClosingPairs: [
+            { open: "{", close: "}" },
+            { open: "(", close: ")" },
+            { open: "[", close: "]" }
+        ]
+    }
+);</code></pre>
+        </section>
+
+        <section id="highlighting">
+            <h2>9. Syntax Highlighting</h2>
+            <p>
+                After tokenization, the editor maps token types to visual styles.
+            </p>
+
+            <div class="flow">Token
+    ↓
+Token Type
+    ↓
+Theme
+    ↓
+Visual Style / Color</div>
+
+            <p>
+                This is why changing the editor theme changes the appearance without changing
+                the source code.
+            </p>
+        </section>
+
+        <section id="levels">
+            <h2>10. Syntax Highlighting Is Not Full Language Understanding</h2>
+
+            <h3>Level 1 — Text</h3>
+<pre><code>const x = 10;</code></pre>
+            <p>The editor simply stores text.</p>
+
+            <h3>Level 2 — Tokenization</h3>
+            <p><code>const</code> is a keyword, <code>x</code> is an identifier and <code>10</code> is a number.</p>
+
+            <h3>Level 3 — Parsing</h3>
+            <p>The code can be represented as a structured syntax tree.</p>
+
+<pre><code>VariableDeclaration
+    |
+    +-- Identifier: x
+    |
+    +-- Literal: 10</code></pre>
+
+            <h3>Level 4 — Semantic Analysis</h3>
+            <p>
+                The editor can understand relationships between symbols, such as which variable
+                declaration a particular reference belongs to.
+            </p>
+
+            <h3>Level 5 — Language Services</h3>
+            <p>
+                Advanced editor features include autocomplete, diagnostics, hover information,
+                go-to-definition, references, rename, formatting and code actions.
+            </p>
+        </section>
+
+        <section id="services">
+            <h2>11. Language Services</h2>
+
+            <div class="flow">JavaScript
+    ↓
+Parser / Language Service
+    ├── Diagnostics
+    ├── Completion
+    ├── Hover
+    ├── Definition
+    ├── References
+    └── Rename</div>
+
+            <p>
+                Language services are responsible for the deeper understanding needed for
+                intelligent editor features.
+            </p>
+        </section>
+
+        <section id="javascript">
+            <h2>12. JavaScript and TypeScript in Monaco</h2>
+
+<pre><code>function add(a, b) {
+    return a + b;
+}
+
+const result = add(10, 20);</code></pre>
+
+            <p>A richer language service can understand:</p>
+
+            <div>
+                <span class="tag">Function: add</span>
+                <span class="tag">Parameters: a, b</span>
+                <span class="tag">Variable: result</span>
+                <span class="tag">Function Call: add()</span>
+            </div>
+
+            <p>
+                JavaScript and TypeScript use Monaco's TypeScript language-service infrastructure
+                for richer language features.
+            </p>
+
+            <p>Possible features include:</p>
+            <ul>
+                <li>Autocomplete</li>
+                <li>Diagnostics</li>
+                <li>Hover information</li>
+                <li>Go to definition</li>
+                <li>Find references</li>
+                <li>Rename symbol</li>
+            </ul>
+        </section>
+
+        <section id="workers">
+            <h2>13. Web Workers</h2>
+            <p>
+                Language analysis can be expensive. A language service can run in a Web Worker
+                so that heavy analysis does not block the main editor UI.
+            </p>
+
+            <div class="flow">Browser
+    |
+    +--------------------+
+    |                    |
+    v                    v
+Editor UI          Language Worker
+    |                    |
+    +---- Messages ------+</div>
+
+            <p>
+                The editor sends model information to the worker, the worker performs analysis,
+                and the results are returned to the editor.
+            </p>
+        </section>
+
+        <section id="architecture-own">
+            <h2>14. Recommended Architecture for Our Own Editor</h2>
+
+<pre><code>editor/
+│
+├── core/
+│   ├── editor.js
+│   ├── model.js
+│   ├── tokenizer.js
+│   └── theme.js
+│
+├── languages/
+│   │
+│   ├── javascript/
+│   │   ├── tokenizer.js
+│   │   ├── configuration.js
+│   │   ├── parser.js
+│   │   └── language-service.js
+│   │
+│   ├── python/
+│   │   ├── tokenizer.js
+│   │   ├── configuration.js
+│   │   ├── parser.js
+│   │   └── language-service.js
+│   │
+│   ├── html/
+│   │   ├── tokenizer.js
+│   │   ├── configuration.js
+│   │   └── language-service.js
+│   │
+│   └── css/
+│       ├── tokenizer.js
+│       ├── configuration.js
+│       └── language-service.js
+│
+└── file-detection/
+    └── language-detection.js</code></pre>
+
+            <p>
+                This keeps each language independent and allows new language support to be added
+                without changing the editor core.
+            </p>
+        </section>
+
+        <section id="roadmap">
+            <h2>15. Learning Roadmap</h2>
+
+            <h3>Level 1 — Editor Basics</h3>
+            <ul>
+                <li>Text model</li>
+                <li>Cursor</li>
+                <li>Selection</li>
+                <li>Lines</li>
+                <li>Undo / Redo</li>
+                <li>Keyboard handling</li>
+            </ul>
+
+            <h3>Level 2 — Language Detection</h3>
+            <ul>
+                <li>File extensions</li>
+                <li>MIME types</li>
+                <li>Language IDs</li>
+                <li>Filename patterns</li>
+            </ul>
+
+            <h3>Level 3 — Tokenization</h3>
+            <ul>
+                <li>Lexer</li>
+                <li>Tokens</li>
+                <li>Regular expressions</li>
+                <li>Token states</li>
+                <li>Comments</li>
+                <li>Strings</li>
+                <li>Keywords</li>
+                <li>Operators</li>
+            </ul>
+
+            <h3>Level 4 — Syntax</h3>
+            <ul>
+                <li>Grammar</li>
+                <li>Parser</li>
+                <li>AST</li>
+                <li>Syntax errors</li>
+            </ul>
+
+            <h3>Level 5 — Editor Language Features</h3>
+            <ul>
+                <li>Bracket matching</li>
+                <li>Auto-closing</li>
+                <li>Indentation</li>
+                <li>Folding</li>
+                <li>Comments</li>
+                <li>Formatting</li>
+            </ul>
+
+            <h3>Level 6 — Semantic Analysis</h3>
+            <ul>
+                <li>Symbols</li>
+                <li>Scope</li>
+                <li>Types</li>
+                <li>References</li>
+                <li>Definitions</li>
+            </ul>
+
+            <h3>Level 7 — Language Services</h3>
+            <ul>
+                <li>Autocomplete</li>
+                <li>Hover</li>
+                <li>Go to Definition</li>
+                <li>Find References</li>
+                <li>Rename</li>
+                <li>Diagnostics</li>
+                <li>Code Actions</li>
+            </ul>
+
+            <h3>Level 8 — Worker Architecture</h3>
+            <ul>
+                <li>Web Workers</li>
+                <li>Message passing</li>
+                <li>Model synchronization</li>
+                <li>Background analysis</li>
+            </ul>
+        </section>
+
+        <section id="conclusion">
+            <h2>16. Final Understanding</h2>
+
+            <div class="flow">File
+ ↓
+Language Detection
+ ↓
+Language ID
+ ↓
+Language Definition
+ ↓
+Tokenizer
+ ↓
+Tokens
+ ↓
+Syntax Highlighting
+ ↓
+Parser
+ ↓
+AST
+ ↓
+Semantic Analysis
+ ↓
+Language Services
+ ↓
+Autocomplete / Diagnostics /
+Hover / Definition / References</div>
+
+            <div class="success">
+                <strong>Key Point:</strong>
+                “Understanding a language” is not one single function. It is a collection of
+                systems working together.
+            </div>
+
+            <h3>Recommended First Project</h3>
+            <p>
+                Start with a small JavaScript tokenizer and syntax highlighter. Then build a simple
+                parser and AST. After that, add autocomplete and diagnostics.
+            </p>
+
+            <h3>Official Resources</h3>
+            <ul>
+                <li>
+                    Monaco Editor:
+                    <a href="https://microsoft.github.io/monaco-editor/" target="_blank">
+                        microsoft.github.io/monaco-editor
+                    </a>
+                </li>
+                <li>
+                    Monarch Tokenizer:
+                    <a href="https://microsoft.github.io/monaco-editor/monarch-static.html" target="_blank">
+                        Monarch documentation
+                    </a>
+                </li>
+                <li>
+                    Monaco API:
+                    <a href="https://microsoft.github.io/monaco-editor/typedoc/" target="_blank">
+                        Monaco Typedoc
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<div class="footer">
+    Monaco-Like Editor Learning Documentation
+</div>
+
+</body>
+</html>
