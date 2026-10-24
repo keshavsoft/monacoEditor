@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Editor - Visual Studio Code</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    :root {
+      --vscode-bg: #1e1e1e;
+      --vscode-header-bg: #252526;
+      --vscode-tab-active-bg: #1e1e1e;
+      --vscode-tab-inactive-bg: #2d2d2d;
+      --vscode-tab-border: #1e1e1e;
+      --vscode-border: #333333;
+      --vscode-text: #cccccc;
+      --vscode-text-active: #ffffff;
+      --vscode-text-muted: #858585;
+      --vscode-statusbar-bg: #007acc;
+      --vscode-statusbar-text: #ffffff;
+      --vscode-accent: #007acc;
+      --vscode-hover: rgba(255, 255, 255, 0.08);
+      --font-mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body.light-theme {
+      --vscode-bg: #ffffff;
+      --vscode-header-bg: #f3f3f3;
+      --vscode-tab-active-bg: #ffffff;
+      --vscode-tab-inactive-bg: #ececec;
+      --vscode-tab-border: #007acc;
+      --vscode-border: #e5e5e5;
+      --vscode-text: #333333;
+      --vscode-text-active: #000000;
+      --vscode-text-muted: #6e6e6e;
+      --vscode-statusbar-bg: #007acc;
+      --vscode-statusbar-text: #ffffff;
+      --vscode-hover: rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      background-color: var(--vscode-bg);
+      color: var(--vscode-text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* VS Code Tab Bar */
+    .vscode-titlebar {
+      height: 38px;
+      background: var(--vscode-header-bg);
+      border-bottom: 1px solid var(--vscode-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .vscode-tabs-container {
+      display: flex;
+      height: 100%;
+      align-items: flex-end;
+    }
+
+    .vscode-tab {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      background: var(--vscode-tab-active-bg);
+      color: var(--vscode-text-active);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      border-right: 1px solid var(--vscode-border);
+      border-top: 2px solid var(--vscode-accent);
+      cursor: pointer;
+    }
+
+    .vscode-tab-icon {
+      color: #cbcb41;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .vscode-tab-title {
+      font-weight: 500;
+    }
+
+    /* Actions on top right */
+    .vscode-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-right: 10px;
+    }
+
+    .vscode-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--vscode-text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: var(--font-sans);
+      transition: all 0.15s ease;
+    }
+
+    .vscode-btn:hover {
+      background: var(--vscode-hover);
+      color: var(--vscode-text-active);
+    }
+
+    .vscode-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Breadcrumbs Bar */
+    .vscode-breadcrumbs {
+      height: 24px;
+      background: var(--vscode-bg);
+      border-bottom: 1px solid var(--vscode-border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 11px;
+      color: var(--vscode-text-muted);
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .vscode-breadcrumbs span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .vscode-breadcrumbs .active {
+      color: var(--vscode-text);
+      font-weight: 500;
+    }
+
+    /* Main Fullscreen Editor */
+    .editor-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      min-height: 0;
+      background: var(--vscode-bg);
+    }
+
+    #monacoContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #fallbackEditor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      resize: none;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--vscode-text-active);
+      background: var(--vscode-bg);
+      display: none;
+      outline: none;
+    }
+
+    /* VS Code Status Bar */
+    .vscode-statusbar {
+      height: 24px;
+      background: var(--vscode-statusbar-bg);
+      color: var(--vscode-statusbar-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      font-size: 12px;
+      user-select: none;
+      flex-shrink: 0;
+      font-family: var(--font-sans);
+    }
+
+    .statusbar-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .statusbar-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0 6px;
+      height: 24px;
+      border-radius: 2px;
+    }
+
+    .statusbar-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
+
+  <!-- Monaco Editor AMD Loader from jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+</head>
+
+<body>
+
+  <!-- VS Code Tab Header -->
+  <div class="vscode-titlebar">
+    <div class="vscode-tabs-container">
+      <div class="vscode-tab">
+        <i class="bi bi-braces vscode-tab-icon"></i>
+        <span class="vscode-tab-title">spec.json</span>
+      </div>
+    </div>
+
+    <!-- Quick Tools: Format, Copy, Theme Toggle, Clear -->
+    <div class="vscode-actions">
+      <button class="vscode-btn" id="btnFormat" title="Format Document (Shift+Alt+F)">
+        <i class="bi bi-magic"></i>
+        <span>Format</span>
+      </button>
+
+      <button class="vscode-btn" id="btnCopy" title="Copy All Code">
+        <i class="bi bi-clipboard" id="copyIcon"></i>
+        <span id="copyText">Copy</span>
+      </button>
+
+      <button class="vscode-btn" id="btnThemeToggle" title="Toggle Theme (Dark / Light)">
+        <i class="bi bi-sun" id="themeIcon"></i>
+        <span id="themeText">Light</span>
+      </button>
+
+      <button class="vscode-btn" id="btnClear" title="Clear Editor">
+        <i class="bi bi-trash"></i>
+        <span>Clear</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="vscode-breadcrumbs">
+    <span><i class="bi bi-folder2-open"></i> workspace</span>
+    <i class="bi bi-chevron-right" style="font-size: 9px;"></i>
+    <span><i class="bi bi-folder"></i> monaco-editor</span>
+    <i class="bi bi-chevron-right" style="font-size: 9px;"></i>
+    <span class="active"><i class="bi bi-filetype-json text-warning"></i> spec.json</span>
+  </div>
+
+  <!-- Fullscreen Professional Editor -->
+  <main class="editor-container">
+    <div id="monacoContainer"></div>
+    <textarea id="fallbackEditor" spellcheck="false"
+      placeholder="// Enter code or JSON specification here..."></textarea>
+  </main>
+
+  <!-- VS Code Status Bar -->
+  <footer class="vscode-statusbar">
+    <div class="statusbar-section">
+      <div class="statusbar-item" title="No errors">
+        <i class="bi bi-check2-circle"></i>
+        <span>Ready</span>
+      </div>
+      <div class="statusbar-item" id="lineCountItem">
+        <span id="totalLines">0 lines</span>
+      </div>
+    </div>
+
+    <div class="statusbar-section">
+      <div class="statusbar-item" id="cursorPosItem" title="Current Cursor Position">
+        <span id="cursorPos">Ln 1, Col 1</span>
+      </div>
+      <div class="statusbar-item" title="Indentation">
+        <span>Spaces: 2</span>
+      </div>
+      <div class="statusbar-item" title="Encoding">
+        <span>UTF-8</span>
+      </div>
+      <div class="statusbar-item" title="Language Mode">
+        <i class="bi bi-braces"></i>
+        <span>JSON</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initial JSON specification
+    const DEFAULT_SPEC = {
+      "tagName": "div",
+      "classList": "card shadow-sm border rounded overflow-hidden",
+      "children": [
+        {
+          "tagName": "table",
+          "classList": "table table-hover mb-0",
+          "children": [
+            {
+              "tagName": "thead",
+              "classList": "table-dark",
+              "children": [
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "th", "classList": "py-3 px-4", "textContent": "itemName" },
+                    { "tagName": "th", "classList": "py-3 px-4", "textContent": "baseUnit" }
+                  ]
+                }
+              ]
+            },
+            {
+              "tagName": "tbody",
+              "children": [
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.09/30mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.11-25" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.11-30" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.12/40mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "1.00/50mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "mtr" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    const initialJsonString = JSON.stringify(DEFAULT_SPEC, null, 2);
+
+    let monacoEditorInstance = null;
+    let isMonacoLoaded = false;
+    let currentTheme = "vs-dark"; // VS Code Dark default
+
+    const monacoContainer = document.getElementById("monacoContainer");
+    const fallbackEditor = document.getElementById("fallbackEditor");
+    const cursorPosEl = document.getElementById("cursorPos");
+    const totalLinesEl = document.getElementById("totalLines");
+    const btnFormat = document.getElementById("btnFormat");
+    const btnCopy = document.getElementById("btnCopy");
+    const copyIcon = document.getElementById("copyIcon");
+    const copyText = document.getElementById("copyText");
+    const btnThemeToggle = document.getElementById("btnThemeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+    const btnClear = document.getElementById("btnClear");
+
+    const getEditorValue = () => {
+      if (isMonacoLoaded && monacoEditorInstance) {
+        return monacoEditorInstance.getValue();
+      }
+      return fallbackEditor.value;
+    };
+
+    const setEditorValue = (val) => {
+      if (isMonacoLoaded && monacoEditorInstance) {
+        monacoEditorInstance.setValue(val);
+      } else {
+        fallbackEditor.value = val;
+      }
+      updateStatusMetrics();
+    };
+
+    const updateStatusMetrics = () => {
+      const code = getEditorValue();
+      const lineCount = code ? code.split("\n").length : 0;
+      totalLinesEl.textContent = `${lineCount} ${lineCount === 1 ? 'line' : 'lines'}`;
+    };
+
+    // Initialize Monaco Editor with full Visual Studio Code aesthetics
+    if (typeof window.require !== "undefined") {
+      window.MonacoEnvironment = {
+        getWorkerUrl: function () {
+          const proxy = `
+            self.MonacoEnvironment = {
+              baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/'
+            };
+            importScripts('https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/base/worker/workerMain.js');
+          `;
+          return `data:text/javascript;charset=utf-8,${encodeURIComponent(proxy)}`;
+        }
+      };
+
+      window.require.config({
+        paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" }
+      });
+
+      window.require(["vs/editor/editor.main"], function () {
+        isMonacoLoaded = true;
+        fallbackEditor.style.display = "none";
+        monacoContainer.style.display = "block";
+
+        monacoEditorInstance = monaco.editor.create(monacoContainer, {
+          value: initialJsonString,
+          language: "json",
+          theme: currentTheme,
+          automaticLayout: true,
+          fontSize: 14,
+          fontFamily: "'JetBrains Mono', Consolas, 'Courier New', monospace",
+          fontLigatures: true,
+          lineNumbers: "on",
+          renderLineHighlight: "all",
+          minimap: { enabled: true, side: "right", maxColumn: 80 },
+          scrollBeyondLastLine: false,
+          folding: true,
+          bracketPairColorization: { enabled: true },
+          formatOnPaste: true,
+          formatOnType: true,
+          tabSize: 2,
+          wordWrap: "on",
+          smoothScrolling: true,
+          cursorBlinking: "smooth",
+          padding: { top: 12, bottom: 12 }
+        });
+
+        monacoEditorInstance.onDidChangeCursorPosition((e) => {
+          cursorPosEl.textContent = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+        });
+
+        monacoEditorInstance.onDidChangeModelContent(() => {
+          updateStatusMetrics();
+        });
+
+        updateStatusMetrics();
+      });
+    } else {
+      fallbackEditor.style.display = "block";
+      monacoContainer.style.display = "none";
+      fallbackEditor.value = initialJsonString;
+      fallbackEditor.addEventListener("input", updateStatusMetrics);
+      updateStatusMetrics();
+    }
+
+    // Format Document Action
+    btnFormat.addEventListener("click", () => {
+      if (isMonacoLoaded && monacoEditorInstance) {
+        monacoEditorInstance.getAction("editor.action.formatDocument").run();
+      } else {
+        try {
+          const parsed = JSON.parse(fallbackEditor.value);
+          fallbackEditor.value = JSON.stringify(parsed, null, 2);
+          updateStatusMetrics();
+        } catch (e) {
+          alert("Invalid JSON: " + e.message);
+        }
+      }
+    });
+
+    // Copy Code Action
+    btnCopy.addEventListener("click", async () => {
+      try {
+        const text = getEditorValue();
+        await navigator.clipboard.writeText(text);
+        copyIcon.className = "bi bi-check2 text-success";
+        copyText.textContent = "Copied!";
+        setTimeout(() => {
+          copyIcon.className = "bi bi-clipboard";
+          copyText.textContent = "Copy";
+        }, 1800);
+      } catch (err) {
+        alert("Copy failed: " + err.message);
+      }
+    });
+
+    // Theme Toggle (VS Code Dark vs Light)
+    btnThemeToggle.addEventListener("click", () => {
+      if (currentTheme === "vs-dark") {
+        currentTheme = "vs";
+        document.body.classList.add("light-theme");
+        themeIcon.className = "bi bi-moon";
+        themeText.textContent = "Dark";
+        if (isMonacoLoaded && window.monaco) {
+          monaco.editor.setTheme("vs");
+        }
+      } else {
+        currentTheme = "vs-dark";
+        document.body.classList.remove("light-theme");
+        themeIcon.className = "bi bi-sun";
+        themeText.textContent = "Light";
+        if (isMonacoLoaded && window.monaco) {
+          monaco.editor.setTheme("vs-dark");
+        }
+      }
+    });
+
+    // Clear Action
+    btnClear.addEventListener("click", () => {
+      if (confirm("Clear editor content?")) {
+        setEditorValue("");
+      }
+    });
+  </script>
+</body>
+
+</html>

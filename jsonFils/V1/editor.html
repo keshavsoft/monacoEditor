@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Editor</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS for rendered components styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+      --border-color: #e2e8f0;
+      --bg-header: #ffffff;
+      --bg-preview: #f8fafc;
+      --text-main: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Heading Only */
+    .app-header {
+      height: 52px;
+      min-height: 52px;
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+
+    .app-header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    /* Split Workspace: Left Editor, Right Result */
+    .workspace-container {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      width: 100%;
+      height: calc(100vh - 52px);
+    }
+
+    .editor-pane {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      border-right: 1px solid var(--border-color);
+      background: #ffffff;
+      min-width: 0;
+    }
+
+    #monacoContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #fallbackEditor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      resize: none;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.5;
+      color: #0f172a;
+      background: #ffffff;
+      display: none;
+      outline: none;
+    }
+
+    .preview-pane {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: auto;
+      background: var(--bg-preview);
+      padding: 24px;
+      min-width: 0;
+    }
+
+    #errorBanner {
+      display: none;
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    #outputContainer {
+      min-height: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .workspace-container {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .editor-pane {
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .preview-pane {
+        height: 50vh;
+      }
+    }
+  </style>
+
+  <!-- Monaco Editor AMD Loader from jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+</head>
+
+<body>
+
+  <!-- Top Heading -->
+  <header class="app-header">
+    <h1>Live Editor</h1>
+  </header>
+
+  <!-- Left: Plain Editor | Right: Live Result -->
+  <main class="workspace-container">
+    <div class="editor-pane">
+      <div id="monacoContainer"></div>
+      <textarea id="fallbackEditor" spellcheck="false" placeholder="Enter JSON specification here..."></textarea>
+    </div>
+
+    <div class="preview-pane">
+      <div id="errorBanner"></div>
+      <div id="outputContainer"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    // Sample JSON specification from user's view
+    const DEFAULT_SPEC = {
+      "tagName": "div",
+      "classList": "card shadow-sm border rounded overflow-hidden",
+      "children": [
+        {
+          "tagName": "table",
+          "classList": "table table-hover mb-0",
+          "children": [
+            {
+              "tagName": "thead",
+              "classList": "table-dark",
+              "children": [
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "th", "classList": "py-3 px-4", "textContent": "itemName" },
+                    { "tagName": "th", "classList": "py-3 px-4", "textContent": "baseUnit" }
+                  ]
+                }
+              ]
+            },
+            {
+              "tagName": "tbody",
+              "children": [
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.09/30mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.11-25" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.11-30" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "0.12/40mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "kgs" }
+                  ]
+                },
+                {
+                  "tagName": "tr",
+                  "children": [
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "1.00/50mm" },
+                    { "tagName": "td", "classList": "py-2 px-4", "textContent": "mtr" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    // Load external buildSpecElement if present, with complete fallback
+    let buildSpecElement;
+    try {
+      const localMod = await import("../dist/min.js");
+      buildSpecElement = localMod.buildSpecElement || localMod.default;
+    } catch (e) {
+      try {
+        const cdnMod = await import("https://keshavsoft.github.io/json-to-tag/dist/min.js");
+        buildSpecElement = cdnMod.buildSpecElement || cdnMod.default;
+      } catch (err2) {
+        // Fallback below
+      }
+    }
+
+    if (!buildSpecElement && window.ks?.jsonToTag?.buildSpecElement) {
+      buildSpecElement = window.ks.jsonToTag.buildSpecElement;
+    }
+
+    // Comprehensive native DOM builder fallback
+    function fallbackBuildElement({ inSpec }) {
+      if (!inSpec) return null;
+      if (Array.isArray(inSpec)) {
+        const frag = document.createDocumentFragment();
+        inSpec.forEach(item => {
+          const child = fallbackBuildElement({ inSpec: item });
+          if (child) frag.appendChild(child);
+        });
+        return frag;
+      }
+      if (typeof inSpec === "string" || typeof inSpec === "number") {
+        return document.createTextNode(String(inSpec));
+      }
+
+      const tag = inSpec.tagName || "div";
+      const isSvg = ["svg", "path", "circle", "rect", "line", "polyline", "polygon", "g", "text"].includes(tag.toLowerCase());
+      const el = isSvg
+        ? document.createElementNS("http://www.w3.org/2000/svg", tag)
+        : document.createElement(tag);
+
+      if (inSpec.classList) {
+        if (typeof inSpec.classList === "string") {
+          inSpec.classList.trim().split(/\s+/).filter(Boolean).forEach(c => el.classList.add(c));
+        } else if (Array.isArray(inSpec.classList)) {
+          inSpec.classList.forEach(c => c && el.classList.add(c));
+        }
+      } else if (inSpec.className) {
+        el.className = inSpec.className;
+      }
+
+      if (inSpec.attributes && typeof inSpec.attributes === "object") {
+        for (const [k, v] of Object.entries(inSpec.attributes)) {
+          if (v !== undefined && v !== null) {
+            el.setAttribute(k, v);
+          }
+        }
+      }
+
+      if (inSpec.style) {
+        if (typeof inSpec.style === "string") {
+          el.style.cssText = inSpec.style;
+        } else if (typeof inSpec.style === "object") {
+          Object.assign(el.style, inSpec.style);
+        }
+      }
+
+      if (inSpec.textContent !== undefined && inSpec.textContent !== null) {
+        el.textContent = inSpec.textContent;
+      }
+
+      if (inSpec.innerHTML !== undefined && inSpec.innerHTML !== null) {
+        el.innerHTML = inSpec.innerHTML;
+      }
+
+      if (Array.isArray(inSpec.children)) {
+        for (const childSpec of inSpec.children) {
+          const childEl = fallbackBuildElement({ inSpec: childSpec });
+          if (childEl) {
+            el.appendChild(childEl);
+          }
+        }
+      }
+
+      return el;
+    }
+
+    const renderFn = (spec) => {
+      if (buildSpecElement) {
+        try {
+          return buildSpecElement({ inSpec: spec });
+        } catch (e) {
+          return fallbackBuildElement({ inSpec: spec });
+        }
+      }
+      return fallbackBuildElement({ inSpec: spec });
+    };
+
+    const monacoContainer = document.getElementById("monacoContainer");
+    const fallbackEditor = document.getElementById("fallbackEditor");
+    const outputContainer = document.getElementById("outputContainer");
+    const errorBanner = document.getElementById("errorBanner");
+
+    let monacoEditorInstance = null;
+    let isMonacoLoaded = false;
+    let debounceTimer = null;
+
+    const showError = (msg) => {
+      errorBanner.textContent = msg;
+      errorBanner.style.display = "block";
+    };
+
+    const clearError = () => {
+      errorBanner.textContent = "";
+      errorBanner.style.display = "none";
+    };
+
+    const getEditorText = () => {
+      if (isMonacoLoaded && monacoEditorInstance) {
+        return monacoEditorInstance.getValue();
+      }
+      return fallbackEditor.value;
+    };
+
+    const renderSpec = (spec) => {
+      clearError();
+      try {
+        outputContainer.innerHTML = "";
+        const el = renderFn(spec);
+        if (el) {
+          if (Array.isArray(el)) {
+            outputContainer.append(...el);
+          } else {
+            outputContainer.appendChild(el);
+          }
+        }
+      } catch (err) {
+        showError("Render Error: " + (err.message || String(err)));
+      }
+    };
+
+    const parseAndRender = () => {
+      const text = getEditorText().trim();
+      if (!text) {
+        outputContainer.innerHTML = "";
+        clearError();
+        return;
+      }
+
+      try {
+        const spec = JSON.parse(text);
+        renderSpec(spec);
+      } catch (err) {
+        showError("JSON Syntax Error: " + err.message);
+      }
+    };
+
+    const onContentChange = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        parseAndRender();
+      }, 150);
+    };
+
+    const initialJsonString = JSON.stringify(DEFAULT_SPEC, null, 2);
+
+    // Initialize Monaco Editor
+    if (typeof window.require !== "undefined") {
+      window.MonacoEnvironment = {
+        getWorkerUrl: function () {
+          const proxy = `
+            self.MonacoEnvironment = {
+              baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/'
+            };
+            importScripts('https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/base/worker/workerMain.js');
+          `;
+          return `data:text/javascript;charset=utf-8,${encodeURIComponent(proxy)}`;
+        }
+      };
+
+      window.require.config({
+        paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" }
+      });
+
+      window.require(["vs/editor/editor.main"], function () {
+        isMonacoLoaded = true;
+        fallbackEditor.style.display = "none";
+        monacoContainer.style.display = "block";
+
+        monacoEditorInstance = monaco.editor.create(monacoContainer, {
+          value: initialJsonString,
+          language: "json",
+          theme: "vs",
+          automaticLayout: true,
+          fontSize: 13,
+          lineNumbers: "on",
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          folding: true,
+          formatOnPaste: true,
+          formatOnType: true,
+          tabSize: 2,
+          wordWrap: "on",
+          padding: { top: 12, bottom: 12 }
+        });
+
+        monacoEditorInstance.onDidChangeModelContent(() => {
+          onContentChange();
+        });
+
+        parseAndRender();
+      });
+    } else {
+      fallbackEditor.style.display = "block";
+      monacoContainer.style.display = "none";
+      fallbackEditor.value = initialJsonString;
+      fallbackEditor.addEventListener("input", onContentChange);
+      parseAndRender();
+    }
+  </script>
+</body>
+
+</html>
