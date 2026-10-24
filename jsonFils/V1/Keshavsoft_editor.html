@@ -884,15 +884,26 @@
         }],
         ["app.js", {
           language: "javascript",
-          value: '// Welcome to keshavsoft editor\nfunction greet(name = "Developer") {\n  return `Hello, ${name}!`;\n}\n\nconsole.log(greet());\n'
+          value: '// Welcome to keshavsoft editor\nfunction greet(name = "Developer") {\n  return "Hello, " + name + "!";\n}\n\nconsole.log(greet());\n'
         }],
         ["index.html", {
           language: "html",
-          value: '<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Hello, world!</h1>\n</body>\n</html>\n'
+          value: [
+            "<!doctype html>",
+            '<html lang="en">',
+            "<head>",
+            '  <meta charset="UTF-8">',
+            "  <title>My page<" + "/title>",
+            "<" + "/head>",
+            "<body>",
+            "  <h1>Hello, world!<" + "/h1>",
+            "<" + "/body>",
+            "<" + "/html>\n"
+          ].join("\n")
         }],
         ["style.css", {
           language: "css",
-          value: 'body {\n  margin: 0;\n  font-family: system-ui, sans-serif;\n}\n'
+          value: "body {\n  margin: 0;\n  font-family: system-ui, sans-serif;\n}\n"
         }]
       ]);
 
