@@ -1,4 +1,4 @@
-import { startApp } from "./DomContentLoad.js";
+import { startApp } from "./domContentLoad.js";
 
 function startFunc() {
   startApp();
