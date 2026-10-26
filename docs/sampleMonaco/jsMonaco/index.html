@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monaco Editor - JavaScript</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.main.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #1e1e1e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .tab-bar {
+            height: 35px;
+            background-color: #252526;
+            display: flex;
+            align-items: flex-end;
+            border-bottom: 1px solid #1e1e1e;
+            user-select: none;
+        }
+
+        .tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 35px;
+            padding: 0 16px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-size: 13px;
+            border-top: 2px solid #007acc;
+            cursor: pointer;
+        }
+
+        .tab .tab-icon {
+            font-size: 11px;
+            background-color: #f7df1e;
+            color: #000;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+
+        .tab .tab-close {
+            font-size: 16px;
+            color: #858585;
+            margin-left: 6px;
+        }
+
+        #jsEditor {
+            width: 100vw;
+            height: calc(100vh - 35px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tab-bar">
+        <div class="tab" id="activeTab" title="sample.js">
+            <span class="tab-icon">JS</span>
+            <span class="tab-name">sample.js</span>
+            <span class="tab-close">&times;</span>
+        </div>
+    </div>
+    <div id="jsEditor"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
