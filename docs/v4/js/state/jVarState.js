@@ -1,0 +1,46 @@
+export const jVarState = {
+  activeFile: "sample.js",
+  editor: null,
+  dark: true,
+  wrap: false,
+  panelVisible: true,
+  activePanel: "terminal",
+  terminalProfile: "cmd",
+  rootFolderName: "WORKSPACE",
+  rootDirectoryHandle: null,
+  treeNodes: [
+    {
+      id: "spec.json",
+      name: "spec.json",
+      path: "spec.json",
+      type: "file",
+      language: "json"
+    },
+    {
+      id: "sample.js",
+      name: "sample.js",
+      path: "sample.js",
+      type: "file",
+      language: "javascript"
+    }
+  ],
+  files: new Map([
+    ["spec.json", {
+      name: "spec.json",
+      path: "spec.json",
+      language: "json",
+      value: JSON.stringify({
+        name: "keshavsoft-app",
+        version: "1.0.0",
+        description: "Monaco editor workspace sample",
+        main: "sample.js"
+      }, null, 2)
+    }],
+    ["sample.js", {
+      name: "sample.js",
+      path: "sample.js",
+      language: "javascript",
+      value: `console.log("Hello world");\n`
+    }]
+  ])
+};
