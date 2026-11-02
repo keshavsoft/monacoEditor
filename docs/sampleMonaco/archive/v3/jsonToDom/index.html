@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monaco Editor - JSON</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.main.min.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div class="tab-bar">
+        <div class="file-name-label" id="fileNameLabel">No file selected</div>
+        <div class="tab-actions">
+            <button class="upload-btn" id="uploadBtn" title="Upload a JSON (.json) file">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span>upload json</span>
+            </button>
+            <input type="file" id="fileInput" accept=".json,application/json,text/json"
+                style="display: none;">
+        </div>
+    </div>
+
+    <div class="split-view">
+        <div class="editor-pane">
+            <div id="jsonEditor"></div>
+        </div>
+        <div class="preview-pane">
+            <div class="preview-header">
+                <span>DOM Preview</span>
+                <button id="renderBtn" class="render-btn">Render</button>
+            </div>
+            <div id="domPreview" class="dom-preview"></div>
+        </div>
+    </div>
+    <div class="drop-overlay">Drop .json file here to open</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+    <script type="module" src="./js/index.js"></script>
+</body>
+
+</html>
