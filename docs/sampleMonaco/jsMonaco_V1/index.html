@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monaco Editor - JavaScript</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.main.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #1e1e1e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .tab-bar {
+            height: 35px;
+            background-color: #252526;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #1e1e1e;
+            user-select: none;
+            padding-right: 12px;
+        }
+
+        .tabs-container {
+            display: flex;
+            align-items: flex-end;
+            height: 100%;
+            overflow-x: auto;
+        }
+
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 35px;
+            padding: 0 16px;
+            background-color: #2d2d2d;
+            color: #969696;
+            font-size: 13px;
+            border-top: 2px solid transparent;
+            border-right: 1px solid #1e1e1e;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .tab:hover {
+            color: #ffffff;
+            background-color: #282828;
+        }
+
+        .tab.active {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border-top: 2px solid #007acc;
+        }
+
+        .tab .tab-icon {
+            font-size: 11px;
+            background-color: #f7df1e;
+            color: #000;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+
+        .tab .tab-name {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab .tab-close {
+            font-size: 15px;
+            color: #858585;
+            margin-left: 6px;
+            border-radius: 3px;
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .tab .tab-close:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .tab-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #0e639c;
+            color: #ffffff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.15s;
+        }
+
+        .upload-btn:hover {
+            background-color: #1177bb;
+        }
+
+        .upload-btn:active {
+            background-color: #094771;
+        }
+
+        .upload-btn svg {
+            flex-shrink: 0;
+        }
+
+        #jsEditor {
+            width: 100vw;
+            height: calc(100vh - 35px);
+        }
+
+        /* Drag and Drop overlay */
+        .drop-overlay {
+            display: none;
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(14, 99, 156, 0.2);
+            border: 2px dashed #007acc;
+            color: #fff;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        body.dragging .drop-overlay {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tab-bar">
+        <div class="tabs-container" id="tabsContainer">
+            <!-- Tabs rendered dynamically -->
+        </div>
+        <div class="tab-actions">
+            <button class="upload-btn" id="uploadBtn" title="Upload a JavaScript (.js) file">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span>Upload JS</span>
+            </button>
+            <input type="file" id="fileInput" accept=".js,text/javascript,application/javascript" style="display: none;">
+        </div>
+    </div>
+
+    <div id="jsEditor"></div>
+    <div class="drop-overlay">Drop .js file here to open</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
