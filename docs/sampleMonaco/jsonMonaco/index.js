@@ -42,6 +42,12 @@ function uploadFile() {
     };
 }
 
+function resolveAssetUrl(assetName) {
+    const currentUrl = new URL(window.location.href);
+    const safePath = currentUrl.pathname.endsWith("/") ? currentUrl.pathname : `${currentUrl.pathname}/`;
+    return new URL(assetName, `${currentUrl.origin}${safePath}`).href;
+}
+
 function StartFunc() {
     require.config({
         paths: {
@@ -50,7 +56,7 @@ function StartFunc() {
     });
 
     require(["vs/editor/editor.main"], async () => {
-        const code = await fetch("./sample.json").then(res => res.text());
+        const code = await fetch(resolveAssetUrl("sample.json")).then(res => res.text());
 
         editor = monaco.editor.create(document.getElementById("jsonEditor"), {
             model: monaco.editor.createModel(code, "json"),

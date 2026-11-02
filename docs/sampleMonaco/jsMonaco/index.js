@@ -26,6 +26,12 @@ function addFile(name, code) {
     switchTab(name);
 }
 
+function resolveAssetUrl(assetName) {
+    const currentUrl = new URL(window.location.href);
+    const safePath = currentUrl.pathname.endsWith("/") ? currentUrl.pathname : `${currentUrl.pathname}/`;
+    return new URL(assetName, `${currentUrl.origin}${safePath}`).href;
+}
+
 function StartFunc() {
     const editorPath = "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs";
 
@@ -37,7 +43,7 @@ function StartFunc() {
         const fileInput = document.getElementById("fileInput");
         const fileName = "sample.js";
 
-        const response = await fetch(`./${fileName}`);
+        const response = await fetch(resolveAssetUrl(fileName));
         const sourceCode = await response.text();
 
         files[fileName] = monaco.editor.createModel(sourceCode, "javascript");

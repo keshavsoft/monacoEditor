@@ -1,0 +1,10 @@
+{
+  "name": "sampleMonaco",
+  "version": "1.0.0",
+  "description": "Active JSON file in Monaco Editor",
+  "editor": {
+    "theme": "vs-dark",
+    "language": "json",
+    "active": true
+  }
+}

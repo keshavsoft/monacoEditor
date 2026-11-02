@@ -166,6 +166,12 @@ function setupUpload() {
     });
 }
 
+function resolveAssetUrl(assetName) {
+    const currentUrl = new URL(window.location.href);
+    const safePath = currentUrl.pathname.endsWith("/") ? currentUrl.pathname : `${currentUrl.pathname}/`;
+    return new URL(assetName, `${currentUrl.origin}${safePath}`).href;
+}
+
 function initEditor() {
     require.config({
         paths: {
@@ -174,7 +180,7 @@ function initEditor() {
     });
 
     require(["vs/editor/editor.main"], function () {
-        fetch("./sample.js")
+        fetch(resolveAssetUrl("sample.js"))
             .then((res) => res.text())
             .then((code) => {
                 const initialFileName = "sample.js";
