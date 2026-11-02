@@ -1,75 +1,99 @@
-let editor;
-const files = {};
-let activeFile = null;
+const state = {
+    editor: null,
+    currentModel: null,
+    currentFileName: null
+};
 
 function renderTabs() {
     const tabs = document.getElementById("tabsContainer");
+    if (!tabs) return;
+
     tabs.innerHTML = "";
 
-    Object.keys(files).forEach((name) => {
-        const tab = document.createElement("div");
-        tab.className = `tab ${name === activeFile ? "active" : ""}`;
-        tab.textContent = name;
+    if (!state.currentFileName) return;
 
-        tab.onclick = () => switchFile(name);
-        tabs.appendChild(tab);
+    const tab = document.createElement("div");
+    tab.className = "tab active";
+    tab.textContent = state.currentFileName;
+    tabs.appendChild(tab);
+}
+
+function ensureMonacoLoaded() {
+    return new Promise((resolve, reject) => {
+        if (window.monaco && window.monaco.editor) {
+            resolve();
+            return;
+        }
+
+        require.config({
+            paths: {
+                vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
+            }
+        });
+
+        require(["vs/editor/editor.main"], () => resolve(), (error) => reject(error));
     });
 }
 
-function switchFile(name) {
-    if (!files[name]) return;
+async function loadFileIntoEditor(fileName, content) {
+    await ensureMonacoLoaded();
 
-    activeFile = name;
-    editor.setModel(files[name]);
+    const editorEl = document.getElementById("jsonEditor");
+    if (!editorEl) return;
+
+    if (!state.editor) {
+        state.editor = monaco.editor.create(editorEl, {
+            theme: "vs-dark",
+            automaticLayout: true,
+            minimap: { enabled: false }
+        });
+    }
+
+    if (state.currentModel) {
+        state.currentModel.dispose();
+    }
+
+    const model = monaco.editor.createModel(content, "json");
+    state.currentModel = model;
+    state.currentFileName = fileName;
+    state.editor.setModel(model);
+
+    editorEl.style.display = "block";
     renderTabs();
 }
 
-function addFile(name, code) {
-    files[name] = monaco.editor.createModel(code, "json");
-    switchFile(name);
-}
+function bindUpload() {
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
 
-function uploadFile() {
-    const input = document.getElementById("fileInput");
-    input.click();
+    if (!uploadBtn || !fileInput) return;
 
-    input.onchange = async () => {
-        const file = input.files[0];
-        if (!file || !file.name.endsWith(".json")) return;
+    uploadBtn.addEventListener("click", () => fileInput.click());
 
-        addFile(file.name, await file.text());
-        input.value = "";
-    };
-}
+    fileInput.addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
 
-function resolveAssetUrl(assetName) {
-    const currentUrl = new URL(window.location.href);
-    const safePath = currentUrl.pathname.endsWith("/") ? currentUrl.pathname : `${currentUrl.pathname}/`;
-    return new URL(assetName, `${currentUrl.origin}${safePath}`).href;
-}
-
-function StartFunc() {
-    require.config({
-        paths: {
-            vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
+        if (!file.name.toLowerCase().endsWith(".json")) {
+            alert("Please select a JSON (.json) file.");
+            fileInput.value = "";
+            return;
         }
-    });
 
-    require(["vs/editor/editor.main"], () => {
-        const blankModel = monaco.editor.createModel("", "json");
-
-        editor = monaco.editor.create(document.getElementById("jsonEditor"), {
-            model: blankModel,
-            theme: "vs-dark",
-            automaticLayout: true
-        });
-
-        files["untitled.json"] = blankModel;
-        activeFile = "untitled.json";
-
-        renderTabs();
-        document.getElementById("uploadBtn").onclick = uploadFile;
+        const content = await file.text();
+        await loadFileIntoEditor(file.name, content);
+        fileInput.value = "";
     });
 }
 
-StartFunc();
+function initEditor() {
+    const editorEl = document.getElementById("jsonEditor");
+    if (editorEl) {
+        editorEl.style.display = "none";
+    }
+
+    renderTabs();
+    bindUpload();
+}
+
+initEditor();

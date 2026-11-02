@@ -124,6 +124,7 @@ body {
 }
 
 #jsonEditor {
+    display: none;
     width: 100vw;
     height: calc(100vh - 35px);
 }
