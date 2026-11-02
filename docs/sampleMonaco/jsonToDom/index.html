@@ -26,7 +26,18 @@
         </div>
     </div>
 
-    <div id="jsonEditor"></div>
+    <div class="split-view">
+        <div class="editor-pane">
+            <div id="jsonEditor"></div>
+        </div>
+        <div class="preview-pane">
+            <div class="preview-header">
+                <span>DOM Preview</span>
+                <button id="renderBtn" class="render-btn">Render</button>
+            </div>
+            <div id="domPreview" class="dom-preview"></div>
+        </div>
+    </div>
     <div class="drop-overlay">Drop .json file here to open</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>

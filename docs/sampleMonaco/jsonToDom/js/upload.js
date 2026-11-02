@@ -41,30 +41,42 @@ export async function loadFileIntoEditor(fileName, content) {
     state.editor.setModel(model);
 
     editorEl.style.display = "block";
-    updateFileLabel(file.name || fileName || "No file selected");
+    updateFileLabel(fileName || "No file selected");
 }
 
 export function bindUpload() {
     const uploadBtn = document.getElementById("uploadBtn");
-    const fileInput = document.getElementById("fileInput");
 
-    if (!uploadBtn || !fileInput) return;
+    if (!uploadBtn) return;
 
-    uploadBtn.addEventListener("click", () => fileInput.click());
-
-    fileInput.addEventListener("change", async (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        if (!file.name.toLowerCase().endsWith(".json")) {
-            alert("Please select a JSON (.json) file.");
-            fileInput.value = "";
+    uploadBtn.addEventListener("click", async () => {
+        if (!window.showOpenFilePicker) {
+            alert("This browser does not support the File System Access API. Use a modern Chromium-based browser.");
             return;
         }
 
-        const content = await file.text();
-        const fullPath = file.name || "No file selected";
-        await loadFileIntoEditor(fullPath, content);
-        fileInput.value = "";
+        try {
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: "JSON Files",
+                        accept: {
+                            "application/json": [".json"],
+                            "text/json": [".json"]
+                        }
+                    }
+                ],
+                multiple: false
+            });
+
+            const file = await fileHandle.getFile();
+            const content = await file.text();
+            await loadFileIntoEditor(file.name, content);
+        } catch (error) {
+            if (error && error.name !== "AbortError") {
+                console.error("File picker failed:", error);
+                alert("Unable to open the selected JSON file.");
+            }
+        }
     });
 }
