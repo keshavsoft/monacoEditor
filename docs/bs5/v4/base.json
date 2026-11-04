@@ -1,0 +1,114 @@
+{
+    "tagName": "table",
+    "attributes": {
+        "class": "table table-hover table-striped align-middle border mb-0"
+    },
+    "children": [
+        {
+            "tagName": "colgroup",
+            "attributes": {
+                "data-role": "table-colgroup"
+            },
+            "children": [
+                {
+                    "tagName": "col",
+                    "attributes": {
+                        "width": "70%"
+                    }
+                }
+            ]
+        },
+        {
+            "tagName": "thead",
+            "attributes": {
+                "class": "table-dark",
+                "data-role": "table-header"
+            },
+            "children": [
+                {
+                    "tagName": "tr",
+                    "attributes": {
+                        "data-role": "table-header-row"
+                    },
+                    "children": [
+                        {
+                            "tagName": "th",
+                            "textContent": "itemName",
+                            "attributes": {
+                                "class": "py-3 px-3 fw-semibold text-uppercase small"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagName": "tbody",
+            "attributes": {
+                "data-role": "table-body"
+            },
+            "children": [
+                {
+                    "tagName": "tr",
+                    "attributes": {
+                        "class": "align-middle"
+                    },
+                    "children": [
+                        {
+                            "tagName": "td",
+                            "textContent": "0.09/30mm",
+                            "attributes": {
+                                "class": "py-3 px-3 text-secondary"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tagName": "tr",
+                    "attributes": {
+                        "class": "align-middle"
+                    },
+                    "children": [
+                        {
+                            "tagName": "td",
+                            "textContent": "0.11-25",
+                            "attributes": {
+                                "class": "py-3 px-3 text-secondary"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "tagName": "tr",
+                    "attributes": {
+                        "class": "align-middle"
+                    },
+                    "children": [
+                        {
+                            "tagName": "td",
+                            "textContent": "0.11-30",
+                            "attributes": {
+                                "class": "py-3 px-3 text-secondary"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tagName": "tfoot",
+            "attributes": {
+                "data-role": "table-footer"
+            },
+            "children": [
+                {
+                    "tagName": "tr",
+                    "attributes": {
+                        "data-role": "table-footer-row"
+                    },
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
