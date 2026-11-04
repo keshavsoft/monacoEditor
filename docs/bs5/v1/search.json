@@ -1,0 +1,48 @@
+{
+    "tagName": "div",
+    "attributes": {
+        "class": "row mb-3 justify-content-end"
+    },
+    "children": [
+        {
+            "tagName": "div",
+            "attributes": {
+                "class": "col-md-4"
+            },
+            "children": [
+                {
+                    "tagName": "div",
+                    "attributes": {
+                        "class": "input-group"
+                    },
+                    "children": [
+                        {
+                            "tagName": "span",
+                            "attributes": {
+                                "class": "input-group-text bg-white"
+                            },
+                            "children": [
+                                {
+                                    "tagName": "i",
+                                    "attributes": {
+                                        "class": "bi bi-search"
+                                    },
+                                    "textContent": "🔍"
+                                }
+                            ]
+                        },
+                        {
+                            "tagName": "input",
+                            "attributes": {
+                                "type": "text",
+                                "id": "tableSearch",
+                                "class": "form-control",
+                                "placeholder": "Search table..."
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

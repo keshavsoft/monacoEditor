@@ -1,0 +1,231 @@
+{
+  "tagName": "div",
+  "attributes": {
+    "class": "container mt-5"
+  },
+  "children": [
+    {
+      "tagName": "div",
+      "attributes": {
+        "class": "card shadow-sm"
+      },
+      "children": [
+        {
+          "tagName": "div",
+          "attributes": {
+            "class": "card-body"
+          },
+          "children": [
+            {
+              "tagName": "div",
+              "attributes": {
+                "class": "row mb-3 justify-content-end"
+              },
+              "children": [
+                {
+                  "tagName": "div",
+                  "attributes": {
+                    "class": "col-md-4"
+                  },
+                  "children": [
+                    {
+                      "tagName": "div",
+                      "attributes": {
+                        "class": "input-group"
+                      },
+                      "children": [
+                        {
+                          "tagName": "span",
+                          "attributes": {
+                            "class": "input-group-text bg-white"
+                          },
+                          "children": [
+                            {
+                              "tagName": "i",
+                              "attributes": {
+                                "class": "bi bi-search"
+                              },
+                              "textContent": "🔍"
+                            }
+                          ]
+                        },
+                        {
+                          "tagName": "input",
+                          "attributes": {
+                            "type": "text",
+                            "id": "tableSearch",
+                            "class": "form-control",
+                            "placeholder": "Search table..."
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tagName": "div",
+              "attributes": {
+                "class": "table-responsive"
+              },
+              "children": [
+                {
+                  "tagName": "table",
+                  "attributes": {
+                    "class": "table table-striped table-hover align-middle",
+                    "id": "dataTable"
+                  },
+                  "children": [
+                    {
+                      "tagName": "thead",
+                      "attributes": {
+                        "class": "table-dark"
+                      },
+                      "children": [
+                        {
+                          "tagName": "tr",
+                          "children": [
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "col"
+                              },
+                              "textContent": "#"
+                            },
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "col"
+                              },
+                              "textContent": "First Name"
+                            },
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "col"
+                              },
+                              "textContent": "Last Name"
+                            },
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "col"
+                              },
+                              "textContent": "Handle"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tagName": "tbody",
+                      "children": [
+                        {
+                          "tagName": "tr",
+                          "children": [
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "row"
+                              },
+                              "textContent": "1"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Mark"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Otto"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "@mdo"
+                            }
+                          ]
+                        },
+                        {
+                          "tagName": "tr",
+                          "children": [
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "row"
+                              },
+                              "textContent": "2"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Jacob"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Thornton"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "@fat"
+                            }
+                          ]
+                        },
+                        {
+                          "tagName": "tr",
+                          "children": [
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "row"
+                              },
+                              "textContent": "3"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Larry"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "the Bird"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "@twitter"
+                            }
+                          ]
+                        },
+                        {
+                          "tagName": "tr",
+                          "children": [
+                            {
+                              "tagName": "th",
+                              "attributes": {
+                                "scope": "row"
+                              },
+                              "textContent": "4"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Jane"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "Doe"
+                            },
+                            {
+                              "tagName": "td",
+                              "textContent": "@jdoe"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
